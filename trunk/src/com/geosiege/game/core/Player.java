@@ -24,7 +24,7 @@ public class Player {
   public String experienceString;
   
   public Player() {
-    maxHealth = 60;
+    maxHealth = 1000;
     experience = 0;
     addExp(0);
   }

@@ -39,8 +39,6 @@ import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Bullet;
 import com.geosiege.game.guns.Gun;
-import com.geosiege.game.guns.control.DirectionalGunControl;
-
 
 public class PlayerShip extends Ship {
   
@@ -106,10 +104,13 @@ public class PlayerShip extends Ship {
         .withEmitRate(60)
         .build();
     
-    gun = Arsenal.getPeaShooter(this);
-    gun.fireCooldown = 200;
-    gun.bulletSpeed = 110f;
-    gun.fireOffset = 40;
+    gun = Arsenal.getTriGun(this);
+    gun.setFireCooldown(200);
+    gun.setBulletSpeed(150);
+    gun.setFireOffset(40);
+    //gun.fireCooldown = 200;
+    //gun.bulletSpeed = 110f;
+    //gun.fireOffset = 40;
     //gun.control = new DirectionalGunControl(this, 0);
     
     addComponent(gun);
@@ -179,7 +180,7 @@ public class PlayerShip extends Ship {
   
   public void fire(float angle) {
    
-    gun.aimAngle = angle;
+    gun.setAimAngle(angle);
     //((DirectionalGunControl) gun.control).angleOffset
     
     gun.fire();

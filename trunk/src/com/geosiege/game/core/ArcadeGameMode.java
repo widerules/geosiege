@@ -29,10 +29,13 @@ import com.geosiege.common.explosion.ExplosionManager;
 import com.geosiege.common.ui.JoystickControl;
 import com.geosiege.common.ui.ProgressBar;
 import com.geosiege.common.ui.TrackballControl;
+import com.geosiege.game.menu.MainMenuGameMode;
 import com.geosiege.game.resources.GameResources;
 import com.geosiege.game.ships.PlayerShip;
 
 public class ArcadeGameMode extends GameMode {
+  
+  public MainMenuGameMode mainMenuMode;
   
   ProgressBar healthBar;
   JoystickControl moveControls;
@@ -86,7 +89,6 @@ public class ArcadeGameMode extends GameMode {
   
   public void endGame() {
     updater.handler.sendEmptyMessage(1);
-    int z = 5;
   }
   
   @Override
@@ -174,10 +176,19 @@ public class ArcadeGameMode extends GameMode {
   }
   
   public boolean onKeyDown(int key, KeyEvent e) {
+    if (super.onKeyDown(key,e))
+      return true;
     return fireControls.onKeyDown(key, e);
   }
   
   public boolean onKeyUp(int key, KeyEvent e) {
     return fireControls.onKeyUp(key, e);
+  }
+  
+  @Override
+  public boolean onBackPress() {
+    mainMenuMode.init();
+    updater.setMode(mainMenuMode);
+    return true;
   }
 }

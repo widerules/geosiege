@@ -20,20 +20,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.explosion.ExplosionManager;
 import com.geosiege.common.util.Bounds;
 import com.geosiege.common.util.Circle;
 import com.geosiege.common.util.Polygon;
-import com.geosiege.common.util.Vector2d;
 import com.geosiege.common.util.Polygon.PolygonBuilder;
 import com.geosiege.game.SimplePathComponent;
 import com.geosiege.game.guns.Arsenal;
-import com.geosiege.game.guns.Bullet;
 import com.geosiege.game.guns.Gun;
-import com.geosiege.game.guns.control.AimingGunControl;
 
 public class DeathStar extends EnemyShip {
 
@@ -80,7 +75,7 @@ public class DeathStar extends EnemyShip {
     bounds = new Bounds(new Circle(10));
     
     gun = Arsenal.getDeathBlossom(this);
-    gun.autoFire = true;
+    gun.setAutoFire(true);
     //gun.bulletSpeed = 30;
     //gun.fireCooldown = 2500;
 

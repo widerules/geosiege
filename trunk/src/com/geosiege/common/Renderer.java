@@ -17,14 +17,14 @@
 package com.geosiege.common;
 
 
-import com.geosiege.game.core.Game;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
+import com.geosiege.game.core.Game;
 
 public class Renderer {
   

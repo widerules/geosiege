@@ -17,6 +17,7 @@
 package com.geosiege.game.core;
 
 import com.geosiege.common.Updater;
+import com.geosiege.game.menu.MainMenuGameMode;
 
 public class Game {
   
@@ -40,6 +41,7 @@ public class Game {
     menuMode.init();
     
     menuMode.arcadeMode = arcadeMode;
+    arcadeMode.mainMenuMode = menuMode;
     
     updater.setMode(menuMode);
   }

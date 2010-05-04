@@ -54,6 +54,6 @@ public class AimingGunControl extends GunControl {
         Math.atan( (target.y + jitterY - owner.y) / (target.x + jitterX - owner.x)));
     if (target.x + jitterX < owner.x)
       angle += 180;
-    gun.aimAngle = angle;
+    gun.setAimAngle(angle);
   }
 }

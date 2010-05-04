@@ -41,10 +41,18 @@ public class GameMode {
   }
   
   public boolean onKeyDown(int key, KeyEvent e) {
+    if (key == KeyEvent.KEYCODE_BACK) { 
+      return onBackPress();
+    } 
     return false;
   }
   
   public boolean onKeyUp(int key, KeyEvent e) {
     return false;
   }
+  
+  public boolean onBackPress() {
+    return false;
+  }
+  
 }

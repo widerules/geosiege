@@ -20,15 +20,25 @@ import java.util.ArrayList;
 
 import android.graphics.Canvas;
 
+import com.geosiege.game.guns.control.GroupGunControl;
+
 public class GunGroup extends Gun {
 
   ArrayList<Gun> guns;
   
   public GunGroup(ArrayList<Gun> guns) {
     this.guns = guns;
+    for (Gun gun : guns) {
+      if (gun.control == null) {
+        gun.control = new GroupGunControl(this, gun.aimAngle);
+      }
+    }
   }
   
   public void fire() {
+    
+    aimGun();
+    
     Gun gun;
     int size = guns.size();
     for ( int i = 0 ; i < size ; i++) {
@@ -64,5 +74,25 @@ public class GunGroup extends Gun {
       gun = guns.get(i);
       gun.reset();
     }
+  }
+
+  public void setMaxBullets(int maxBullets) {
+    for (Gun gun : guns)
+      gun.maxBullets = maxBullets;
+  }
+  
+  public void setFireOffset(float fireOffset) {
+    for (Gun gun : guns)
+      gun.fireOffset = fireOffset;
+  }
+  
+  public void setBulletSpeed(float bulletSpeed) {
+    for (Gun gun : guns)
+      gun.bulletSpeed = bulletSpeed;
+  }
+  
+  public void setFireCooldown(int fireCooldown) {
+    for (Gun gun : guns)
+      gun.fireCooldown = fireCooldown;
   }
 }

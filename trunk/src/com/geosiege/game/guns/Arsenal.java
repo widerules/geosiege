@@ -25,31 +25,48 @@ public class Arsenal {
     Gun gun = new GunBuilder()
       .withOwner(owner)
       .withType(GunBuilder.TYPE_BULLETS)
-      .withBulletSpeed(80f)
+      .withBulletSpeed(110f)
       .withMaxBullets(50)
       .withCooldown(100)
       .withFireOffset(40)
       .build();
+
     return gun;
   }
   
+  public static Gun getTriGun(Ship owner) {
+    Gun gun1 = getPeaShooter(owner);
+    gun1.aimAngle = 0;
+    Gun gun2 = getPeaShooter(owner);
+    gun2.aimAngle = 5;
+    Gun gun3 = getPeaShooter(owner);
+    gun3.aimAngle = -5;
+    
+    Gun combo = new GunBuilder()
+      .withType(GunBuilder.TYPE_GROUP)
+      .withSubGun(gun1)
+      .withSubGun(gun2)
+      .withSubGun(gun3)
+      .build();
+
+    return combo;
+  }
   
   public static Gun getDeathBlossom(Ship owner) {
     Gun gun1 = getPeaShooter(owner);
     gun1.control = new DirectionalGunControl(owner, 0);
-    gun1.fireOffset = 20;
-    //gun1.autoFire = true;
     
     Gun gun2 = getPeaShooter(owner);
     gun2.control = new DirectionalGunControl(owner, 180);
-    gun2.fireOffset = 20;
-    //gun2.autoFire = true;
     
     Gun combo = new GunBuilder()
       .withType(GunBuilder.TYPE_GROUP)
       .withSubGun(gun1)
       .withSubGun(gun2)
       .build();
+    
+    combo.setAutoFire(true);
+    combo.setFireOffset(20);
     
     return combo;
   }

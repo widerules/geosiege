@@ -17,7 +17,6 @@
 package com.geosiege.game.guns.control;
 
 import com.geosiege.game.guns.Gun;
-import com.geosiege.game.ships.Ship;
 
 public class AbsoluteAngleGunControl extends GunControl {
   
@@ -31,6 +30,6 @@ public class AbsoluteAngleGunControl extends GunControl {
   
   @Override
   public void aim(Gun gun) {
-    gun.aimAngle = angle;
+    gun.setAimAngle(angle);
   }
 }

@@ -28,7 +28,7 @@ public class GameObject {
   public boolean active = true;
   
   ArrayList<Component> components;
-  
+   
   public GameObject() {
     components = new ArrayList<Component>();
   }
