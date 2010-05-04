@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.geosiege.game.core;
+package com.geosiege.game.menu;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -33,11 +33,8 @@ public class LoadingMenuPage extends MenuPage {
     super(switcher);
     this.gameMode = gameMode;
     
-    
     loadingTextPaint = new Paint(MainMenuGameMode.TITLE_PAINT);
     loadingTextPaint.setTextSize(50);
-    
-
   }
   
   public void draw(Canvas c) {

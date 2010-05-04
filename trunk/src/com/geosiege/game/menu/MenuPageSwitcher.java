@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.geosiege.game.core;
+package com.geosiege.game.menu;
 
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
 import com.geosiege.common.animation.Transition;
 import com.geosiege.common.animation.Transitions;
-import com.geosiege.common.ui.UiElement;
+import com.geosiege.game.core.GameState;
 
 public class MenuPageSwitcher {
 
@@ -120,10 +120,10 @@ public class MenuPageSwitcher {
       }
     }
     
-    if (alpha != null)
-      alpha.update(time);
-    if (beta != null)
-      beta.update(time);
+    if (entering != null)
+      entering.update(time);
+    //if (beta != null)
+    //  beta.update(time);
   }
   
   public void draw(Canvas c) {
@@ -137,6 +137,10 @@ public class MenuPageSwitcher {
     if (entering != null)
       entering.onTouchEvent(e);
     return true;
+  }
+  
+  public MenuPage getActive() {
+    return entering;
   }
   
 }

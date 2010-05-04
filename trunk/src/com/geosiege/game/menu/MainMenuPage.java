@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.geosiege.game.core;
+package com.geosiege.game.menu;
 
 import android.graphics.Canvas;
 
 import com.geosiege.common.ui.ClickHandler;
 import com.geosiege.common.ui.SimpleButton;
+import com.geosiege.game.core.GameState;
 
 public class MainMenuPage extends MenuPage {
 
@@ -76,6 +77,10 @@ public class MainMenuPage extends MenuPage {
          GameState.screenHeight - 30, MainMenuGameMode.MINOR_TEXT_PAINT);
 
     c.restore();
- 
+  }
+  
+  public boolean onBackPress() {
+    // Allows the back button to operate normally.
+    return false;
   }
 }
