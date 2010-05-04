@@ -1,4 +1,4 @@
-package com.zeddic.geo.test.collision;
+package com.geosiege.test.collision;
 
 import junit.framework.TestCase;
 
