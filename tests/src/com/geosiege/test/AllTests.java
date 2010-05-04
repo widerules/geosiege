@@ -1,4 +1,4 @@
-package com.zeddic.geo.test;
+package com.geosiege.test;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
