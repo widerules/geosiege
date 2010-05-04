@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.geosiege.game.core;
+package com.geosiege.game.menu;
 
 import com.geosiege.common.ui.Container;
+import com.geosiege.game.core.GameState;
 
 public class MenuPage extends Container {
 
@@ -32,11 +33,7 @@ public class MenuPage extends Container {
 
   }
   
-  /*public void draw(Canvas canvas) {
-    
+  public boolean onBackPress() {
+    return true;
   }
-  
-  public void update(long time) {
-    
-  } */
 }

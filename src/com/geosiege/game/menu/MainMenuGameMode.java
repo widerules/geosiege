@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.geosiege.game.core;
+package com.geosiege.game.menu;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,6 +23,8 @@ import android.graphics.Paint.Align;
 import android.view.MotionEvent;
 
 import com.geosiege.common.GameMode;
+import com.geosiege.game.core.ArcadeGameMode;
+import com.geosiege.game.core.RotatingBackgroundLayer;
 import com.geosiege.game.resources.GameResources;
 
 public class MainMenuGameMode extends GameMode {
@@ -58,8 +60,6 @@ public class MainMenuGameMode extends GameMode {
   MenuPageSwitcher switcher;
   RotatingBackgroundLayer background;
   
-  
-  
   public MainMenuGameMode() {
     background = new RotatingBackgroundLayer();
     
@@ -74,7 +74,7 @@ public class MainMenuGameMode extends GameMode {
     loadingPage.mainPage = mainPage;
     helpPage.mainPage = mainPage;
     
-    switcher.show(mainPage);
+    init();
   }
   
   public void switchToGame() {
@@ -83,43 +83,19 @@ public class MainMenuGameMode extends GameMode {
   }
   
   public void init() {
-   
+    switcher.show(mainPage);
   }
-  
-  /*public void gotoPage(PageType pageType) {
-    MenuPage page = getPageFromType(pageType);
-    switcher.show(page);
-  }
-  
-  public void returnToPage(PageType pageType) {
-    
-  }
-  
-  private MenuPage getPageFromType(PageType pageType) {
-    switch (pageType) {
-      case MAIN: return mainPage;
-      case LOADING: return loadingPage;
-      default: return mainPage;
-    }
-  } */
   
   @Override
   public void draw(Canvas c) {
     background.draw(c);
-    
     switcher.draw(c);
-    /*mainPage.draw(c);
-    loadingPage.draw(c); */
   }
   
   @Override
   public void update(long time) {
     background.update(time);
-    
     switcher.update(time);
-    
-    /*mainPage.update(time);
-     loadingPage.update(time);*/
   }
   
   /**
@@ -128,5 +104,10 @@ public class MainMenuGameMode extends GameMode {
   public boolean onTouchEvent(MotionEvent e) {
     switcher.onTouchEvent(e);
     return true;
+  }
+  
+  @Override
+  public boolean onBackPress() {
+    return switcher.getActive().onBackPress();
   }
 }

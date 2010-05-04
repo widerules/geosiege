@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.geosiege.game.core;
+package com.geosiege.game.menu;
 
 import com.geosiege.common.ui.ClickHandler;
 import com.geosiege.common.ui.Image;
+import com.geosiege.game.core.GameState;
 import com.geosiege.game.resources.GameResources;
 
 public class HelpMenuPage extends MenuPage {
@@ -40,5 +41,9 @@ public class HelpMenuPage extends MenuPage {
       }
     });
   }
-
+  
+  public boolean onBackPress() {
+    switcher.show(mainPage, false);
+    return true;
+  }
 }
