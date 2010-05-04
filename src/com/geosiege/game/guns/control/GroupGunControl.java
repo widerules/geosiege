@@ -17,20 +17,20 @@
 package com.geosiege.game.guns.control;
 
 import com.geosiege.game.guns.Gun;
-import com.geosiege.game.ships.Ship;
+import com.geosiege.game.guns.GunGroup;
 
-public class DirectionalGunControl extends GunControl {
+public class GroupGunControl extends GunControl {
   
   private static final float DEFAULT_ANGLE_OFFSET = 0;
   
-  public Ship owner;
+  public GunGroup owner;
   public float angleOffset;
   
-  public DirectionalGunControl(Ship owner) {
+  public GroupGunControl(GunGroup owner) {
     this(owner, DEFAULT_ANGLE_OFFSET);
   }
   
-  public DirectionalGunControl(Ship owner, float angleOffset) {
+  public GroupGunControl(GunGroup owner, float angleOffset) {
     this.owner = owner;
     this.angleOffset = angleOffset;
   }
@@ -42,6 +42,6 @@ public class DirectionalGunControl extends GunControl {
   
   @Override
   public void aim(Gun gun) {
-    gun.setAimAngle(owner.angle + angleOffset);
+    gun.setAimAngle(owner.getAimAngle() + angleOffset);
   }
 }

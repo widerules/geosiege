@@ -38,7 +38,7 @@ public class JoystickControl extends GameObject {
   private static final float JOYSTICK_RADIUS = 15;
   
   /** The radius within which to pay attention to user input. */
-  private static final float INPUT_RADIUS = 150;
+  private static final float INPUT_RADIUS = 200;
 
   private static final float STATIC_ARROW_OFFSET = 40;
   private static final float ARROW_OFFSET = 80;
@@ -181,29 +181,37 @@ public class JoystickControl extends GameObject {
     for (int i = 0 ; i < e.getPointerCount() ; i++) {
       float eX = e.getX(i);
       float eY = e.getY(i);
-      // Only process mouse up/down events that are within range.
-      if (inRange(eX, eY)) {
-        if (e.getAction() == MotionEvent.ACTION_DOWN || 
-            e.getAction() == MotionEvent.ACTION_MOVE) {
-          
-          if (!fingerDown) {
-            fingerDown = true;
-            //recenter(eX, eY);
-          }
-          
-          // Move the joystick pointer.
-          setJoystickPosition(eX, eY);
-        
-          // Update the angle.
-          calculateAngle();
-          return true;
-        }
+      if (handleInput(e, eX, eY)) {
+        return true;
       }
     }
     
     // If there is no input, reset the joystick position to the center.
     setJoystickPosition(x, y);
     fingerDown = false;
+    return false;
+  }
+  
+  private boolean handleInput(MotionEvent e, float eX, float eY) {
+    // Only process mouse up/down events that are within range.
+    if (inRange(eX, eY)) {
+      if (e.getAction() == MotionEvent.ACTION_DOWN || 
+          e.getAction() == MotionEvent.ACTION_MOVE) {
+        
+        if (!fingerDown) {
+          fingerDown = true;
+          //recenter(eX, eY);
+        }
+        
+        // Move the joystick pointer.
+        setJoystickPosition(eX, eY);
+      
+        // Update the angle.
+        calculateAngle();
+        
+        return true;
+      }
+    }
     return false;
   }
   

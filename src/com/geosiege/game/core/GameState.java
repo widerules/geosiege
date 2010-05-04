@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 
-import com.geosiege.common.collision.CollisionManager;
 import com.geosiege.common.explosion.ExplosionManager;
 import com.geosiege.common.util.ResourceLoader;
 import com.geosiege.game.ships.PlayerShip;

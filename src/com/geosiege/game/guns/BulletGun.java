@@ -91,7 +91,6 @@ public class BulletGun extends Gun {
     }
   }
   
-  
   public void reset() {
     Bullet bullet;
     for ( int i = 0 ; i < pool.items.length ; i++) {

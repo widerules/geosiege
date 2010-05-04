@@ -23,19 +23,20 @@ import com.geosiege.game.guns.control.GunControl;
 import com.geosiege.game.ships.Ship;
 
 public class Gun extends Component {
-
-  public Ship owner;
-  public float xOffset;
-  public float yOffset;
-  public int maxBullets;
-  public int fireCooldown;
-  public long lastFire;
-  public float fireOffset;
-  public float bulletSpeed;
-  public GunControl control;
-  public float aimAngle = 0;
-  public boolean autoFire;
   
+  protected Ship owner;
+  protected int fireCooldown;
+  protected int maxBullets;
+  protected float fireOffset;
+  protected float bulletSpeed;
+  protected GunControl control;
+  protected boolean autoFire;
+  protected float aimAngle = 0;
+  
+  protected float xOffset;
+  protected float yOffset;
+  protected long lastFire;
+
   public Gun() {
     
   }
@@ -79,5 +80,37 @@ public class Gun extends Component {
     if (autoFire) {
       fire();
     }
+  }
+  
+  public void setMaxBullets(int maxBullets) {
+    this.maxBullets = maxBullets;
+  }
+  
+  public void setFireOffset(float fireOffset) {
+    this.fireOffset = fireOffset;
+  }
+  
+  public void setBulletSpeed(float bulletSpeed) {
+    this.bulletSpeed = bulletSpeed;
+  }
+  
+  public void setFireCooldown(int fireCooldown) {
+    this.fireCooldown = fireCooldown;
+  }
+  
+  public void setGunControl(GunControl control) {
+    this.control = control;
+  }
+  
+  public void setAutoFire(boolean autoFire) {
+    this.autoFire = autoFire;
+  }
+  
+  public void setAimAngle(float aimAngle) {
+    this.aimAngle = aimAngle;
+  }
+ 
+  public float getAimAngle() {
+    return aimAngle;
   }
 }
