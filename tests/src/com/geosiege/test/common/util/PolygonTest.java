@@ -1,4 +1,4 @@
-package com.geosiege.test.util;
+package com.geosiege.test.common.util;
 
 import android.test.AndroidTestCase;
 import android.util.FloatMath;

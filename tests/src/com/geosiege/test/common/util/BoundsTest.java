@@ -1,4 +1,4 @@
-package com.geosiege.test.util;
+package com.geosiege.test.common.util;
 
 import junit.framework.TestCase;
 

@@ -1,4 +1,4 @@
-package com.geosiege.test.collision;
+package com.geosiege.test.common.collision;
 
 import junit.framework.TestCase;
 
