@@ -43,13 +43,15 @@ public class EnemyShip extends Ship {
     super.collide(object, avoidVector);
     
     if (object instanceof Bullet) {
-      die();
+      if (!killed)
+        die();
     }
   }
   
   public void die() {
     this.killed = true;
     ExplosionManager.get().explode(x, y);
+    ExplosionManager.get().explodeWithGravity(x, y, GameState.playerShip);
     GameState.player.addExp(exp);
   }
 }

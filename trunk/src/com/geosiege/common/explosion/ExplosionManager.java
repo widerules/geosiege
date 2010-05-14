@@ -19,14 +19,15 @@ package com.geosiege.common.explosion;
 import android.graphics.Canvas;
 
 import com.geosiege.common.GameObject;
-import com.geosiege.common.util.ObjectPool;
+import com.geosiege.common.PhysicalObject;
+import com.geosiege.common.util.ObjectPoolManager;
 import com.geosiege.common.util.Vector2d;
-import com.geosiege.common.util.ObjectPool.ObjectBuilder;
 
 public class ExplosionManager extends GameObject {
-
-  ObjectPool<Explosion> explodePool;
-  ObjectPool<HitExplosion> hitPool;
+  
+  ObjectPoolManager<Explosion> regularExplosions;
+  ObjectPoolManager<HitExplosion> hitExplosions;
+  ObjectPoolManager<GravityExplosion> gravityExplosions;
   
   public static ExplosionManager singleton;
   
@@ -35,31 +36,18 @@ public class ExplosionManager extends GameObject {
   }
   
   private ExplosionManager() {
-    createPool();
+    createPools();
   }
   
-  private void createPool() {
-    explodePool = new ObjectPool<Explosion>(Explosion.class, 50, new ObjectBuilder<Explosion>() {
-      @Override
-      public Explosion get(int count) {
-        Explosion explosion = new Explosion(0, 0);
-        explosion.active = false;
-        return explosion;
-      }
-    });
+  private void createPools() {
     
-    hitPool = new ObjectPool<HitExplosion>(HitExplosion.class, 50, new ObjectBuilder<HitExplosion>() {
-      @Override
-      public HitExplosion get(int count) {
-        HitExplosion explosion = new HitExplosion(0, 0);
-        explosion.active = false;
-        return explosion;
-      }
-    });
+    regularExplosions = new ObjectPoolManager<Explosion>(Explosion.class);
+    hitExplosions = new ObjectPoolManager<HitExplosion>(HitExplosion.class);
+    gravityExplosions = new ObjectPoolManager<GravityExplosion>(GravityExplosion.class);
   }
   
   public Explosion explode(float x, float y) {
-    Explosion explosion = explodePool.take();
+    Explosion explosion = regularExplosions.take();
     if (explosion == null)
       return null;
     
@@ -70,7 +58,7 @@ public class ExplosionManager extends GameObject {
   }
   
   public HitExplosion hit(float x, float y, Vector2d direction) { 
-    HitExplosion explosion = hitPool.take();
+    HitExplosion explosion = hitExplosions.take();
     if (explosion == null)
       return null;
     
@@ -84,43 +72,30 @@ public class ExplosionManager extends GameObject {
     return explosion;
   }
   
-  public void draw(Canvas canvas) {
-    Explosion explosion;
-    for ( int i = 0 ; i < explodePool.items.length ; i++) {
-      explosion = explodePool.items[i];
-      if (explosion.active)
-        explosion.draw(canvas);
-    }
+  public GravityExplosion explodeWithGravity(
+      float x, float y, PhysicalObject dest) {
     
-    for ( int i = 0 ; i < hitPool.items.length ; i++) {
-      explosion = hitPool.items[i];
-      if (explosion.active)
-        explosion.draw(canvas);
-    }
+    GravityExplosion explosion = gravityExplosions.take();
+    if (explosion == null)
+      return null;
+    
+    explosion.x = x;
+    explosion.y = y;
+    explosion.ignite(dest);
+    
+    return explosion;
+  }
+  
+  public void draw(Canvas canvas) {
+    regularExplosions.draw(canvas);
+    hitExplosions.draw(canvas);
+    gravityExplosions.draw(canvas);
   }
   
   public void update(long time) {
-    Explosion explosion;
-    for ( int i = 0 ; i < explodePool.items.length ; i++) {
-      explosion = explodePool.items[i];
-      if (explosion.active) {
-        explosion.update(time);
-        if (!explosion.active) {
-          explodePool.restore(explosion);
-        }
-      }
-    }
-    
-    HitExplosion hit; 
-    for ( int i = 0 ; i < hitPool.items.length ; i++) {
-      hit = hitPool.items[i];
-      if (hit.active) {
-        hit.update(time);
-        if (!hit.active) {
-          hitPool.restore(hit);
-        }
-      }
-    }
+    regularExplosions.update(time);
+    hitExplosions.update(time);
+    gravityExplosions.update(time);
   }
   
   public static ExplosionManager get() {
