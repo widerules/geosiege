@@ -89,7 +89,7 @@ public class Updater {
         draw(c);
       }
     } catch (Exception e) {
-      Log.i(Renderer.class.getName(), "Error rendering: " + e.toString());
+      Log.i(Updater.class.getName(), "Error rendering: " + e.toString());
     } finally {
       // do this in a finally so that if an exception is thrown
       // during the above, we don't leave the Surface in an
