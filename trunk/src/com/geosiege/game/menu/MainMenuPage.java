@@ -71,10 +71,10 @@ public class MainMenuPage extends MenuPage {
     
     c.drawText("Geo Siege", GameState.screenWidth / 2, 100, MainMenuGameMode.TITLE_PAINT);
     
-    c.drawText(
+    /*c.drawText(
         "Created by Scott Bailey - v0.1",
          GameState.screenWidth / 2,
-         GameState.screenHeight - 30, MainMenuGameMode.MINOR_TEXT_PAINT);
+         GameState.screenHeight - 30, MainMenuGameMode.MINOR_TEXT_PAINT); */
 
     c.restore();
   }
