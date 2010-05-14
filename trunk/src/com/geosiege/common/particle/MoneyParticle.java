@@ -1,12 +1,11 @@
 package com.geosiege.common.particle;
 
-import com.geosiege.common.util.Polygon;
-import com.geosiege.common.util.Vector2d;
-import com.geosiege.common.util.Polygon.PolygonBuilder;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import com.geosiege.common.util.Polygon;
+import com.geosiege.common.util.Polygon.PolygonBuilder;
 
 public class MoneyParticle extends Particle {
 

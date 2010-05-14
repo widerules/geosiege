@@ -23,12 +23,12 @@ import android.graphics.Paint;
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.effects.ExplosionManager;
 import com.geosiege.common.util.Bounds;
 import com.geosiege.common.util.Circle;
 import com.geosiege.common.util.Shape;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.MapBoundsComponent;
+import com.geosiege.game.core.GameState;
 
 
 public class Bullet extends PhysicalObject {
@@ -109,7 +109,7 @@ public class Bullet extends PhysicalObject {
   public void collide(PhysicalObject other, Vector2d avoidVector) {
     super.collide(other, avoidVector);
     
-    ExplosionManager.get().hit(x, y, avoidVector);
+    GameState.effects.hit(x, y, avoidVector);
     
     this.active = false;
   }

@@ -17,7 +17,6 @@
 package com.geosiege.game.ships;
 
 import com.geosiege.common.PhysicalObject;
-import com.geosiege.common.effects.ExplosionManager;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;
@@ -50,8 +49,8 @@ public class EnemyShip extends Ship {
   
   public void die() {
     this.killed = true;
-    ExplosionManager.get().explode(x, y);
-    ExplosionManager.get().explodeWithGravity(x, y, GameState.playerShip);
+    GameState.effects.explode(x, y);
+    GameState.effects.explodeWithGravity(x, y, GameState.playerShip);
     GameState.player.addExp(exp);
   }
 }

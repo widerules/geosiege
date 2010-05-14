@@ -23,19 +23,19 @@ import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.util.ObjectPoolManager;
 import com.geosiege.common.util.Vector2d;
 
-public class ExplosionManager extends GameObject {
+public class Effects extends GameObject {
   
   ObjectPoolManager<Explosion> regularExplosions;
   ObjectPoolManager<HitExplosion> hitExplosions;
   ObjectPoolManager<GravityExplosion> gravityExplosions;
   
-  public static ExplosionManager singleton;
+  public static Effects singleton;
   
   static { 
-    singleton = new ExplosionManager();
+    singleton = new Effects();
   }
   
-  private ExplosionManager() {
+  private Effects() {
     createPools();
   }
   
@@ -98,7 +98,7 @@ public class ExplosionManager extends GameObject {
     gravityExplosions.update(time);
   }
   
-  public static ExplosionManager get() {
+  public static Effects get() {
     return singleton;
   }
 }
