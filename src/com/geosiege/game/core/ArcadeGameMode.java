@@ -25,7 +25,7 @@ import android.view.MotionEvent;
 
 import com.geosiege.common.GameMode;
 import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.effects.ExplosionManager;
+import com.geosiege.common.effects.Effects;
 import com.geosiege.common.ui.JoystickControl;
 import com.geosiege.common.ui.ProgressBar;
 import com.geosiege.common.ui.TrackballControl;
@@ -70,7 +70,7 @@ public class ArcadeGameMode extends GameMode {
     GameState.playerShip = new PlayerShip(300, 300);
     GameState.playerShip.gameMode = this;
     GameState.map.popuplate();
-    GameState.explosionManager = ExplosionManager.get();
+    GameState.effects = Effects.get();
     
     // Create a camera to look at the world
     GameState.camera = new Camera(GameState.playerShip.x, GameState.playerShip.y);
@@ -97,7 +97,7 @@ public class ArcadeGameMode extends GameMode {
     
     GameState.map.draw(c);
     GameState.playerShip.draw(c);
-    GameState.explosionManager.draw(c);
+    GameState.effects.draw(c);
     
     GameState.camera.revert(c);
    
@@ -118,7 +118,7 @@ public class ArcadeGameMode extends GameMode {
     
     GameState.map.update(time);
     GameState.playerShip.update(time);
-    GameState.explosionManager.update(time);
+    GameState.effects.update(time);
     
     /*if(fireControls.shouldFire()) {
       GameState.playerShip.fire();

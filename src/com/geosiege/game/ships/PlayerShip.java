@@ -24,7 +24,6 @@ import android.graphics.Paint.Style;
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.effects.ExplosionManager;
 import com.geosiege.common.particle.ParticleEmitter;
 import com.geosiege.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 import com.geosiege.common.util.Bounds;
@@ -132,7 +131,7 @@ public class PlayerShip extends Ship {
       dieExplodeWait += time;
       
       if (dieExplodeWait > TIME_BETWEEN_DEATH_EXPLOSIONS) {
-        ExplosionManager.get().explode(x + RandomUtil.nextFloat(10), y + RandomUtil.nextFloat(10));
+        GameState.effects.explode(x + RandomUtil.nextFloat(10), y + RandomUtil.nextFloat(10));
         dieExplodeWait = 0;
       }
       
@@ -196,7 +195,7 @@ public class PlayerShip extends Ship {
       health -= 5;
       if (health < 0) {
         health = 0;
-        ExplosionManager.get().hit(x, y, avoidVector);
+        GameState.effects.hit(x, y, avoidVector);
         dying = true;
       }
     } else {

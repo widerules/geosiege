@@ -20,7 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 
-import com.geosiege.common.effects.ExplosionManager;
+import com.geosiege.common.effects.Effects;
 import com.geosiege.common.util.ResourceLoader;
 import com.geosiege.game.ships.PlayerShip;
 
@@ -32,7 +32,7 @@ public class GameState {
   public static PlayerShip playerShip = null;
   public static Map map = null;
   public static Camera camera = null;
-  public static ExplosionManager explosionManager = null;
+  public static Effects effects = null;
   public static Context context = null;
   public static Activity activity;
   
