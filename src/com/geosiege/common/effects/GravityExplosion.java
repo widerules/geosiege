@@ -1,4 +1,4 @@
-package com.geosiege.common.explosion;
+package com.geosiege.common.effects;
 
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.particle.MoneyParticle;

@@ -25,7 +25,7 @@ import android.view.MotionEvent;
 
 import com.geosiege.common.GameMode;
 import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.explosion.ExplosionManager;
+import com.geosiege.common.effects.ExplosionManager;
 import com.geosiege.common.ui.JoystickControl;
 import com.geosiege.common.ui.ProgressBar;
 import com.geosiege.common.ui.TrackballControl;
