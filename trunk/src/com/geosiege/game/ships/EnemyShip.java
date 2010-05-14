@@ -17,7 +17,7 @@
 package com.geosiege.game.ships;
 
 import com.geosiege.common.PhysicalObject;
-import com.geosiege.common.explosion.ExplosionManager;
+import com.geosiege.common.effects.ExplosionManager;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;

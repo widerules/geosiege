@@ -24,7 +24,7 @@ import android.graphics.Paint.Style;
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.explosion.ExplosionManager;
+import com.geosiege.common.effects.ExplosionManager;
 import com.geosiege.common.particle.ParticleEmitter;
 import com.geosiege.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 import com.geosiege.common.util.Bounds;

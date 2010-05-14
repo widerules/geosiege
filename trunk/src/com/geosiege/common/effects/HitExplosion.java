@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.geosiege.common.explosion;
+package com.geosiege.common.effects;
 
 import com.geosiege.common.particle.ParticleEmitter;
 import com.geosiege.common.particle.ParticleEmitter.ParticleEmitterBuilder;
