@@ -20,6 +20,11 @@ public class Vector2d {
   public float x;
   public float y;
   
+  public Vector2d() {
+    this.x = 0;
+    this.y = 0;
+  }
+  
   public Vector2d(float x, float y) {
     this.x = x;
     this.y = y;
