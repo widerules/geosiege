@@ -26,6 +26,10 @@ public class Explosion extends PhysicalObject {
 
   ParticleEmitter emitter;
   
+  public Explosion() {
+    this(0, 0);
+  }
+  
   public Explosion(float x, float y) {
     super(x, y);
     createEmitter();
@@ -33,21 +37,20 @@ public class Explosion extends PhysicalObject {
   
   protected void createEmitter() {
     emitter = new ParticleEmitterBuilder()
-    .at(x, y)
-    .withEmitMode(ParticleEmitter.MODE_OMNI)
-    .withEmitSpeedJitter(2)
-    .withEmitLife(500)
-    .withParticleSpeed(20)
-    .withParticleAlphaRate(-8)
-    .withParticleLife(500)
-    .withMaxParticles(20)
-    .withEmitRate(1000)
-    .build();
+        .at(x, y)
+        .withEmitMode(ParticleEmitter.MODE_OMNI)
+        .withEmitSpeedJitter(2)
+        .withEmitLife(500)
+        .withParticleSpeed(20)
+        .withParticleAlphaRate(-8)
+        .withParticleLife(500)
+        .withMaxParticles(20)
+        .withEmitRate(1000)
+        .build();
   }
   
   public void ignite() {
-    emitter.life = 0;
-    emitter.hasLife = true;
+    emitter.reset();
     active = true;
   }
   

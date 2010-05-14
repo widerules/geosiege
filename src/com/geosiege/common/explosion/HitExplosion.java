@@ -21,9 +21,12 @@ import com.geosiege.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 
 public class HitExplosion extends Explosion {
 
+  public HitExplosion() {
+    this(0, 0);
+  }
+  
   public HitExplosion(float x, float y) {
     super(x, y);
-    // TODO Auto-generated constructor stub
   }
 
   protected void createEmitter() {
@@ -41,5 +44,4 @@ public class HitExplosion extends Explosion {
       .withEmitAngleJitter(20)
       .build();
   }
-  
 }
