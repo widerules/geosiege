@@ -29,7 +29,6 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 
 import com.geosiege.common.GameObject;
-import com.geosiege.common.collision.CollisionManager;
 import com.geosiege.game.Obstacle;
 import com.geosiege.game.ships.DeathStar;
 import com.geosiege.game.ships.EnemyShip;
