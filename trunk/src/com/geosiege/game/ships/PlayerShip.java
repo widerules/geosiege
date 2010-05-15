@@ -24,6 +24,7 @@ import android.graphics.Paint.Style;
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
+import com.geosiege.common.particle.MoneyParticle;
 import com.geosiege.common.particle.ParticleEmitter;
 import com.geosiege.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 import com.geosiege.common.util.Bounds;
@@ -147,8 +148,8 @@ public class PlayerShip extends Ship {
     emitter.x = x;
     emitter.y = y;
     emitter.emitAngle = angle + 180;
-    emitter.update(time);
-    emitter.setEmitRate((long)((velocity.x * velocity.x + velocity.y * velocity.y) * 60 / 20000));
+    //emitter.update(time);
+    //emitter.setEmitRate((long)((velocity.x * velocity.x + velocity.y * velocity.y) * 60 / 20000));
 
     boundsComponent.update(time);
     
@@ -198,6 +199,8 @@ public class PlayerShip extends Ship {
         GameState.effects.hit(x, y, avoidVector);
         dying = true;
       }
+    } else if (object instanceof MoneyParticle) {
+      GameState.player.addExp(5);
     } else {
       super.collide(object, avoidVector);
     }

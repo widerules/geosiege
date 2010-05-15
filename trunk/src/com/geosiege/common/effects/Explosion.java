@@ -50,8 +50,8 @@ public class Explosion extends PhysicalObject {
   }
   
   public void ignite() {
+    enable();
     emitter.reset();
-    active = true;
   }
   
   public void draw(Canvas canvas) {
@@ -63,9 +63,7 @@ public class Explosion extends PhysicalObject {
     emitter.x = this.x;
     emitter.y = this.y;
     emitter.update(time);
-    
-    if (!emitter.hasLife) {
-      active = false;
-    }
+    if (!emitter.active)
+      kill();
   }
 }

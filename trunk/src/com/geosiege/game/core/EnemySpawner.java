@@ -19,16 +19,21 @@ package com.geosiege.game.core;
 import android.graphics.Canvas;
 
 import com.geosiege.common.GameObject;
-import com.geosiege.common.util.ObjectPool;
+import com.geosiege.common.animation.Transition;
+import com.geosiege.common.animation.Transitions;
+import com.geosiege.common.util.ObjectPoolManager;
 import com.geosiege.common.util.RandomUtil;
-import com.geosiege.common.util.ObjectPool.ObjectBuilder;
 import com.geosiege.game.ships.EnemyShip;
 
-public class EnemySpawner extends GameObject {
+public class EnemySpawner<T extends EnemyShip> extends GameObject {
 
   int maxShips;
-  long cooldown;
-  Class<? extends EnemyShip> shipClass;
+  //long startCooldown;
+  //long endCooldown;
+  //long rampupTime;
+  //long startTime;
+  //long cooldown;
+  Class<T> shipClass;
   long lastSpawnTime;
   
   float x;
@@ -36,18 +41,25 @@ public class EnemySpawner extends GameObject {
   float xJitter;
   float yJitter;
   
-  ObjectPool<EnemyShip> pool;
+  Transition cooldownTransition;
   
-  public EnemySpawner(Class<? extends EnemyShip> shipClass, int maxShips, int cooldown) {
+  ObjectPoolManager<T> ships;
+  
+  public EnemySpawner(Class<T> shipClass, int maxShips, int startCooldown, int endCooldown, long rampupTime) {
     this.shipClass = shipClass;
     this.maxShips = maxShips;
-    this.cooldown = cooldown;
-    lastSpawnTime = 0;
-   
+    //this.startCooldown = startCooldown;
+    //this.endCooldown = endCooldown;
+    //this.rampupTime = rampupTime;
+    //this.startTime = System.currentTimeMillis();
+    
+    cooldownTransition = new Transition(startCooldown, endCooldown, rampupTime, Transitions.LINEAR);
+    
+    this.lastSpawnTime = 0;
   }
   
   public void init() {
-    createPool();
+    ships = new ObjectPoolManager<T>(shipClass, maxShips);
   }
   
   public void setSpawn(float x, float y, float xJitter, float yJitter) {
@@ -57,83 +69,47 @@ public class EnemySpawner extends GameObject {
     this.yJitter = yJitter;
   }
   
-  private void createPool() {
+  private boolean canSpawn(long time) {
     
-    pool = new ObjectPool<EnemyShip>(EnemyShip.class, maxShips, new ObjectBuilder<EnemyShip>() {
-      @Override
-      public EnemyShip get(int count) {
-        
-        try {
-          EnemyShip enemy = (EnemyShip) shipClass.newInstance();
-          enemy.x = 500;
-          enemy.y = 500;
-          enemy.active = false;
-          return enemy;
-          
-        } catch (Exception e) {
-          return null;
-        }
-      }
-    });
-  }
- 
-  private boolean canSpawn() {
+    /*double progress = Math.max(
+        1, (double) (System.currentTimeMillis() - startTime) / (double) rampupTime);
+    progress = Transitions.getProgress(Transitions.EXPONENTIAL, progress);
+    cooldown = (long) (startCooldown + (endCooldown - startCooldown) * progress); */
+    long cooldown = (long) cooldownTransition.update(time);
+    
     long now = System.currentTimeMillis();
     return  now - lastSpawnTime > cooldown;
   }
   
-  private void recordSpawn() {
+  private void recordLastSpawnTime() {
     lastSpawnTime = System.currentTimeMillis();
   }
   
   
   private void spawn() {
 
-    EnemyShip ship = pool.take();
+    EnemyShip ship = ships.take();
     if (ship == null)
       return;
-    
-    ship.reset();
-    ship.x = x + RandomUtil.nextFloat(-xJitter, xJitter);
-    ship.y = y + RandomUtil.nextFloat(-yJitter, yJitter);
-    
-    recordSpawn();
+
+    float spawnX = x + RandomUtil.nextFloat(-xJitter, xJitter);
+    float spawnY = y + RandomUtil.nextFloat(-yJitter, yJitter);
+    ship.spawn(spawnX, spawnY);
+
+    recordLastSpawnTime();
   }
   
   public void draw(Canvas c) {
-    
-    EnemyShip ship;
-    for ( int i = 0 ; i < pool.items.length ; i++) {
-      ship = pool.items[i];
-      if (ship.active) {
-        ship.draw(c);
-      }
-    }
+    ships.draw(c);
   }
   
   public void update(long time) {
     
     super.update(time);
     
-    if (canSpawn())
+    if (canSpawn(time))
       spawn();
         
-    EnemyShip ship;
-    for ( int i = 0 ; i < pool.items.length ; i++) {
-      ship = pool.items[i];
-      
-      if (ship.active) {
-        
-        if (ship.killed) {
-          ship.active = false;
-        } else {
-          ship.update(time);
-        }
-        
-        if (!ship.active) {
-          pool.restore(ship);
-        }
-      }
-    }
+    ships.update(time);
   }
 }

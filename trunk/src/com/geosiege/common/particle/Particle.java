@@ -32,17 +32,17 @@ import com.geosiege.common.util.Vector2d;
  * 
  * @author scott
  */
-public class Particle extends GameObject {
+public class Particle extends PhysicalObject {
 
   /** Position in the game world. */
-  public float x;
-  public float y;
+  //public float x;
+  //public float y;
   
   /** Speed + direction of movement. */
-  public Vector2d velocity; 
+  //public Vector2d velocity; 
   
   /** How large the particle should be. */
-  public float scale;
+  //public float scale;
   
   /** How many milliseconds the particle should be rendered for. */
   public float maxLife;
@@ -78,6 +78,9 @@ public class Particle extends GameObject {
   
   /** Distance from the gravity well within which the particle despawns */
   public float gravityWellDespawnDistance;
+  
+  /** If true, will trigger a collide with the gravity well when it reaches it. */
+  public boolean gravityWellCollide;
   
   /** Paint used to draw the particle. */
   protected Paint paint;
@@ -118,6 +121,8 @@ public class Particle extends GameObject {
   public void setVelocity(float x, float y) {
     velocity.x = x;
     velocity.y = y;
+    scaledVelocity.x = 0;
+    scaledVelocity.y = 0;
   }
   
   /**
@@ -127,6 +132,8 @@ public class Particle extends GameObject {
     double radians = Math.toRadians(angle);
     velocity.x = speed * (float) Math.cos(radians);
     velocity.y = speed * (float) Math.sin(radians);
+    scaledVelocity.x = 0;
+    scaledVelocity.y = 0;
   }
   
   /**
@@ -141,7 +148,7 @@ public class Particle extends GameObject {
     // Check to see if the particle should be dead.
     life += time;
     if (life > maxLife) {
-      this.active = false;
+      kill();
     }
     
     // Update transparency.
@@ -217,7 +224,10 @@ public class Particle extends GameObject {
     // If we are within the gravity well's despawn point, kill the particle.
     if (gravityWellDespawnDistance > 0 &&
         distanceSquared < gravityWellDespawnDistance * gravityWellDespawnDistance) {
-        active = false;
+        kill();
+        if (gravityWellCollide) {
+          gravityWell.collide(this, gravityVector);
+        }
     }
     
     gravityVector.x = dX;

@@ -36,6 +36,7 @@ public class BulletGun extends Gun {
       public Bullet get(int count) {
         Bullet bullet = new Bullet(0, 0);
         bullet.active = false;
+        bullet.canRecycle = false;
         bullet.firedByEnemy = (owner instanceof EnemyShip);
         
         return bullet;
@@ -58,7 +59,7 @@ public class BulletGun extends Gun {
     bullet.setAngle(aimAngle);
     bullet.setVelocityBySpeed(aimAngle, bulletSpeed);
     bullet.offset(fireOffset);
-    bullet.active = true;
+    bullet.enable();
     bullet.life = 0;
     
     recordFire();
@@ -97,6 +98,7 @@ public class BulletGun extends Gun {
       bullet = pool.items[i];
       if (bullet.active) {
         bullet.active = false;
+        bullet.canRecycle = false;
         pool.restore(bullet);
       }
     }

@@ -76,14 +76,10 @@ public class DeathStar extends EnemyShip {
     
     gun = Arsenal.getDeathBlossom(this);
     gun.setAutoFire(true);
-    //gun.bulletSpeed = 30;
-    //gun.fireCooldown = 2500;
-
+    
     addComponent(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
     addComponent(new SimplePathComponent(this, PlayerShip.ship, 100));
-    addComponent(gun);
-   
-    
+    addComponent(gun); 
   }
   
   @Override
@@ -99,6 +95,7 @@ public class DeathStar extends EnemyShip {
   
   @Override
   public void draw(Canvas canvas) {
+    
     super.draw(canvas);
     
     canvas.save();
@@ -112,15 +109,4 @@ public class DeathStar extends EnemyShip {
     
     // super.drawBounds(canvas);
   }
-  
-  /*@Override
-  public void collide(PhysicalObject object, Vector2d avoidVector) {
-    super.collide(object, avoidVector);
-    
-    if (object instanceof Bullet) {
-      this.active = false;
-      ExplosionManager.get().explode(x, y);
-    }
-  } */
-
 }

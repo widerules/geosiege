@@ -28,6 +28,7 @@ public class Effects extends GameObject {
   ObjectPoolManager<Explosion> regularExplosions;
   ObjectPoolManager<HitExplosion> hitExplosions;
   ObjectPoolManager<GravityExplosion> gravityExplosions;
+  ObjectPoolManager<Implosion> spawnImplosions;
   
   public static Effects singleton;
   
@@ -44,6 +45,7 @@ public class Effects extends GameObject {
     regularExplosions = new ObjectPoolManager<Explosion>(Explosion.class);
     hitExplosions = new ObjectPoolManager<HitExplosion>(HitExplosion.class);
     gravityExplosions = new ObjectPoolManager<GravityExplosion>(GravityExplosion.class);
+    spawnImplosions = new ObjectPoolManager<Implosion>(Implosion.class);
   }
   
   public Explosion explode(float x, float y) {
@@ -86,16 +88,32 @@ public class Effects extends GameObject {
     return explosion;
   }
   
+  public Implosion implode(float x, float y, long time) {
+    
+    Implosion implosion = spawnImplosions.take();
+    if (implosion == null)
+      return null;
+    
+    implosion.x = x;
+    implosion.y = y;
+    implosion.emitter.emitLife = time;
+    implosion.ignite();
+    
+    return implosion;
+  }
+  
   public void draw(Canvas canvas) {
     regularExplosions.draw(canvas);
     hitExplosions.draw(canvas);
     gravityExplosions.draw(canvas);
+    spawnImplosions.draw(canvas);
   }
   
   public void update(long time) {
     regularExplosions.update(time);
     hitExplosions.update(time);
     gravityExplosions.update(time);
+    spawnImplosions.update(time);
   }
   
   public static Effects get() {
