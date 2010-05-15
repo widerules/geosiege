@@ -120,9 +120,12 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
       gameObject = pool.items[i];
       if (gameObject.active) {
         gameObject.update(time);
-        if (!gameObject.active) {
-          pool.restore(gameObject);
-        }
+      }
+      
+      if (gameObject.canRecycle) {
+        pool.restore(gameObject);
+        gameObject.active = false;
+        gameObject.canRecycle = false;
       }
     }
   }
@@ -141,7 +144,11 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
    */
   public void reclaimPool() {
     for ( int i = 0 ; i < pool.items.length ; i++) {
-      pool.restore(pool.items[i]);
+      if (pool.items[i].active) {
+        pool.items[i].active = false;
+        pool.items[i].canRecycle = false;
+        pool.restore(pool.items[i]);
+      }
     }
   }
 }

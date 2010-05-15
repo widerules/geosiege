@@ -16,7 +16,10 @@
 
 package com.geosiege.game.ships;
 
+import android.graphics.Canvas;
+
 import com.geosiege.common.PhysicalObject;
+import com.geosiege.common.animation.Transitions;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;
@@ -24,17 +27,59 @@ import com.geosiege.game.guns.Bullet;
 
 public class EnemyShip extends Ship {
    
-  public boolean killed;
+  //public boolean killed;
+  
+  protected static final long TIME_TO_SPAWN = 3000;
+  
   public int exp = 1;
+  public boolean spawning = false;
+  public long spawnTime;
 
   public EnemyShip(float x, float y) {
     super(x, y);
-    killed = false;
   }
   
   public void reset() {
-    active = true;
-    killed = false;
+    enable();
+    spawning = false;
+  }
+  
+  public void spawn(float x, float y) {
+    reset();
+    this.x = x;
+    this.y = y;
+    spawning = true;
+    spawnTime = System.currentTimeMillis();
+    
+    // Start a spawning effect.
+    GameState.effects.implode(x, y, TIME_TO_SPAWN);
+  }
+  
+  private void handleSpawning() {
+    if (System.currentTimeMillis() > spawnTime + TIME_TO_SPAWN) {
+      spawning = false;
+    }
+  }
+  
+  public void update(long time) {
+    handleSpawning();
+    if (spawning)
+      return;
+    
+    super.update(time);
+  }
+  
+  public void draw(Canvas canvas) {
+    super.draw(canvas);
+    
+    if (spawning) {
+      paint.setAlpha((int) (255 * Transitions.getProgress(
+          Transitions.EXPONENTIAL,
+          (double) (System.currentTimeMillis() - spawnTime) /
+              (double) TIME_TO_SPAWN)));
+    } else {
+      paint.setAlpha(255);
+    }
   }
   
   @Override
@@ -42,15 +87,21 @@ public class EnemyShip extends Ship {
     super.collide(object, avoidVector);
     
     if (object instanceof Bullet) {
-      if (!killed)
-        die();
+      die();
     }
   }
   
+  public boolean isDead() {
+    return !active;
+  }
+  
   public void die() {
-    this.killed = true;
+    if (isDead())
+      return;
+    
     GameState.effects.explode(x, y);
     GameState.effects.explodeWithGravity(x, y, GameState.playerShip);
-    GameState.player.addExp(exp);
+    //GameState.player.addExp(exp);
+    kill();
   }
 }

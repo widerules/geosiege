@@ -70,6 +70,7 @@ public class Bullet extends PhysicalObject {
   public void reset() {
     life = 0;
     active = true;
+    canRecycle = false;
   }
   
   public void draw(Canvas canvas) {
@@ -89,7 +90,7 @@ public class Bullet extends PhysicalObject {
     super.update(time);
     life += time;
     if (life > maxLife) {
-      this.active = false;
+      kill();
     }
     
     boundsCheck.update(time);
@@ -111,6 +112,6 @@ public class Bullet extends PhysicalObject {
     
     GameState.effects.hit(x, y, avoidVector);
     
-    this.active = false;
+    kill();
   }
 }

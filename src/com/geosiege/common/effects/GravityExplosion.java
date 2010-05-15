@@ -25,35 +25,21 @@ public class GravityExplosion extends Explosion {
         .withEmitCycle(false)
         .withParticleSpeed(6)
         .withMaxParticleSpeed(60)
-        .withParticleAlpha(100)
-        .withParticleAlphaRate(0)
+        //.withParticleAlpha(100)
+        //.withParticleAlphaRate(0)
         .withParticleLife(20 * 1000)
         .withMaxParticles(5)
         .withEmitRate(0)
         .withParticleClass(MoneyParticle.class)
         .withGravityWellMaxDistance(200)
         .withGravityWellDispawnDistance(25)
+        .withGravityWellCollide(true)
         .build();
     emitter.pGravityWellForce = 25;
   }
   
   public void ignite(PhysicalObject destination) {
-    emitter.reset();
-    emitter.life = 0;
-    emitter.hasLife = true;
-    active = true;
-    
+    super.ignite();
     emitter.pGravityWell = destination;
-  }
-  
-  public void update(long time) {
-    super.update(time);
-    emitter.x = this.x;
-    emitter.y = this.y;
-    emitter.update(time);
-    
-    if (!emitter.hasLife) {
-      active = false;
-    }
   }
 }

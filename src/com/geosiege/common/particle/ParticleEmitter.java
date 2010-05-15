@@ -60,6 +60,12 @@ public class ParticleEmitter extends PhysicalObject {
   /** Level of randomness to apply to the emit angle in directional mode. */
   public float emitAngleJitter;
   
+  /** Level of randomness to apply to the particle speed. */
+  public float emitSpeedJitter;
+  
+  /** How far away from the emitter particles should be spawned at. */
+  public float emitSpawnDistance;
+  
   /** How many particles to emit per second. */
   public long emitRate;
   
@@ -68,9 +74,6 @@ public class ParticleEmitter extends PhysicalObject {
   
   /** The emitters current lifespan in milliseconds. */
   public long life;
-  
-  /** True while still emitting new particles. */
-  public boolean hasLife;
   
   /** If true, the particle emitter will reuse particles again until death. */
   public boolean emitCycleParticles;
@@ -108,9 +111,6 @@ public class ParticleEmitter extends PhysicalObject {
   /** The maximum speed that the particle can reach. */
   public float pMaxSpeed;
   
-  /** Level of randomness to apply to the particle speed. */
-  public float pSpeedJitter;
-  
   /** How many milliseconds spawned particles should live for. */
   public float pLife;
   
@@ -140,6 +140,13 @@ public class ParticleEmitter extends PhysicalObject {
    * it will despawn. 0 means the particle will not despawn.
    */
   public float pGravityWellDespawnDistance;
+  
+  /**
+   * If true, a particle in a gravity well will issue a collide event
+   * once it reaches the despawn distance. Only applies when
+   * {@link pGravityWellDespawnDistance} is not equal to 0.
+   */
+  public boolean pGravityWellCollide;
   
   /** The type of particles to spawn. Default is basic {@link Particle}. */
   private Class<? extends Particle> pClass;
@@ -186,8 +193,7 @@ public class ParticleEmitter extends PhysicalObject {
    * Resets the state of the emitter as if it had just been created.
    */
   public void reset() {
-    active = true;
-    hasLife = true;
+    enable();
     life = 0;
     spawnCount = 0;
     lastFire = System.currentTimeMillis();
@@ -213,9 +219,7 @@ public class ParticleEmitter extends PhysicalObject {
       return false;
     
     // Set all the particle properties
-    particle.active = true;
-    particle.x = x;
-    particle.y = y;
+    particle.enable();
     particle.life = 0;
     particle.maxLife = pLife;
     particle.acceleration = pAcceleration;
@@ -226,6 +230,7 @@ public class ParticleEmitter extends PhysicalObject {
     particle.gravityWellForce = pGravityWellForce;
     particle.gravityWellMaxDistance = pGravityWellMaxDistance;
     particle.gravityWellDespawnDistance = pGravityWellDespawnDistance;
+    particle.gravityWellCollide = pGravityWellCollide;
     
     // Determine the direction the particle should be fired at.
     if (emitMode == MODE_DIRECTIONAL) {
@@ -234,8 +239,18 @@ public class ParticleEmitter extends PhysicalObject {
       emitAngle = random.nextFloat() * 360;
     }
     
+    //  Offset the particles spawn distance as needed.
+    if (emitSpawnDistance > 0) {
+      double radians = Math.toRadians(emitAngle);
+      particle.x = x + emitSpawnDistance * (float) Math.cos(radians);
+      particle.y = y + emitSpawnDistance * (float) Math.sin(radians);
+    } else {
+      particle.x = x;
+      particle.y = y;
+    }
+    
     // Determine the speed that the particle should be fired at.
-    float emitSpeed = pSpeed + -pSpeedJitter + random.nextFloat() * pSpeedJitter * 2;
+    float emitSpeed = pSpeed + -emitSpeedJitter + random.nextFloat() * emitSpeedJitter * 2;
     
     // EMIT! GO GO GO!!!!
     particle.setVelocityBySpeed(emitAngle, emitSpeed);
@@ -285,8 +300,16 @@ public class ParticleEmitter extends PhysicalObject {
     if (life <= emitLife || emitLife == 0) {
       emmitNeededParticles(time);
     } else {
-      hasLife = false;
+      kill();
       poolManager.reclaimPool();
+    }
+    
+    // If we have a limited number of particles to supply, and all of them 
+    // have been used, go ahead and kill the emitter.
+    if (!emitCycleParticles &&
+        spawnCount >= maxParticles &&
+        poolManager.pool.numLeft() == poolManager.pool.items.length) {
+      kill();
     }
     
     poolManager.update(time);
@@ -303,6 +326,7 @@ public class ParticleEmitter extends PhysicalObject {
     float emitAngle = 0;
     float emitAngleJitter = 0;
     float emitSpeedJitter = 0;
+    float emitSpawnDistance = 0;
     long emitRate = 10;
     long emitLife = 0;
     float pAcceleration = 0;
@@ -315,6 +339,7 @@ public class ParticleEmitter extends PhysicalObject {
     float pGravityWellForce;
     float pGravityWellMaxDistance = 0;
     float pGravityWellDespawnDistance = 0;
+    boolean pGravityWellCollide = false;
     boolean emitCycleParticles = true;
     
     Class<? extends Particle> pClass = Particle.class;
@@ -351,8 +376,13 @@ public class ParticleEmitter extends PhysicalObject {
       return this;
     }
     
-    public ParticleEmitterBuilder withEmitSpeedJitter(float pEmitSpeedJitter) {
-      this.emitSpeedJitter = pEmitSpeedJitter;
+    public ParticleEmitterBuilder withEmitSpeedJitter(float emitSpeedJitter) {
+      this.emitSpeedJitter = emitSpeedJitter;
+      return this;
+    }
+    
+    public ParticleEmitterBuilder withEmitSpawnDistance(float emitSpawnDistance){
+      this.emitSpawnDistance = emitSpawnDistance;
       return this;
     }
     
@@ -419,6 +449,11 @@ public class ParticleEmitter extends PhysicalObject {
       this.pGravityWellDespawnDistance = distance;
       return this;
     }
+    
+    public ParticleEmitterBuilder withGravityWellCollide(boolean collideWith) {
+      this.pGravityWellCollide = collideWith;
+      return this;
+    }
  
     public ParticleEmitter build() {
       ParticleEmitter emitter = new ParticleEmitter(x, y);
@@ -426,7 +461,8 @@ public class ParticleEmitter extends PhysicalObject {
       emitter.emitAngle = emitAngle;
       emitter.emitAngleJitter = emitAngleJitter;
       emitter.emitCycleParticles = emitCycleParticles;
-      emitter.pSpeedJitter = emitSpeedJitter;
+      emitter.emitSpeedJitter = emitSpeedJitter;
+      emitter.emitSpawnDistance = emitSpawnDistance;
       emitter.emitRate = emitRate;
       emitter.emitLife = emitLife;
       emitter.pAcceleration = pAcceleration;
@@ -439,6 +475,7 @@ public class ParticleEmitter extends PhysicalObject {
       emitter.pGravityWellForce = pGravityWellForce;
       emitter.pGravityWellMaxDistance = pGravityWellMaxDistance;
       emitter.pGravityWellDespawnDistance = pGravityWellDespawnDistance;
+      emitter.pGravityWellCollide = pGravityWellCollide;
       emitter.pClass = pClass;
       emitter.maxParticles = maxParticles;
       

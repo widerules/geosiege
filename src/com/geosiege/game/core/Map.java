@@ -54,8 +54,8 @@ public class Map extends GameObject {
   Path borderPath; 
   Paint paint;
   
-  EnemySpawner spawner;
-  EnemySpawner deathSpawner;
+  EnemySpawner<SimpleEnemyShip> spawner;
+  EnemySpawner<DeathStar> deathSpawner;
 
   
   public Map() {
@@ -64,9 +64,6 @@ public class Map extends GameObject {
     left = 0 + EDGE_BUFFER;
     right = left + width; 
     bottom = top + height;
-    
-   //  CollisionManager.setup(width, height);
-   
     
     borderPath = new Path();
     borderPath.moveTo(left, top);
@@ -85,8 +82,8 @@ public class Map extends GameObject {
     
     background = new ScrollingBackgroundLayer(this);
     
-    spawner = new EnemySpawner(SimpleEnemyShip.class, 15, 5000);
-    deathSpawner = new EnemySpawner(DeathStar.class, 2, 7000);
+    spawner = new EnemySpawner<SimpleEnemyShip>(SimpleEnemyShip.class, 30, 4000, 1000, 50 * 1000);
+    deathSpawner = new EnemySpawner<DeathStar>(DeathStar.class, 10, 7000, 1000, 60 * 1000);
     
     spawner.setSpawn(600, 600, 400, 400);
     deathSpawner.setSpawn(600, 600, 400, 400);

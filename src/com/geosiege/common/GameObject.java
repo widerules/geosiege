@@ -26,6 +26,7 @@ import android.graphics.Canvas;
 public class GameObject {
   
   public boolean active = true;
+  public boolean canRecycle = false;
   
   ArrayList<Component> components;
    
@@ -58,5 +59,15 @@ public class GameObject {
   public void addComponent(Component component) {
     component.parent = this;
     components.add(component);
+  }
+  
+  public void enable() {
+    active = true;
+    canRecycle = false;
+  }
+  
+  public void kill() {
+    active = false;
+    canRecycle = true;
   }
 }

@@ -65,10 +65,10 @@ public class SimpleEnemyShip extends EnemyShip {
     bounds = new Bounds(new Circle(15));
     
     gun = Arsenal.getPeaShooter(this);
-    gun.setGunControl(new AimingGunControl(this, PlayerShip.ship, 200, 50));
+    gun.setGunControl(new AimingGunControl(this, PlayerShip.ship, 200, 25));
     gun.setAutoFire(true);
-    gun.setBulletSpeed(30);
-    gun.setFireCooldown(2500);
+    gun.setBulletSpeed(70);
+    gun.setFireCooldown(800);
     
     addComponent(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
     addComponent(new SimplePathComponent(this, PlayerShip.ship, 100));
@@ -84,6 +84,7 @@ public class SimpleEnemyShip extends EnemyShip {
   
   @Override
   public void draw(Canvas canvas) {
+    
     super.draw(canvas);
     //super.drawBounds(canvas);
     canvas.save();
