@@ -179,10 +179,7 @@ public class PlayerShip extends Ship {
   }
   
   public void fire(float angle) {
-   
-    gun.setAimAngle(angle);
-    //((DirectionalGunControl) gun.control).angleOffset
-    
+    gun.setAimAngle(angle);    
     gun.fire();
   }
   
