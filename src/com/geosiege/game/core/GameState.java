@@ -22,6 +22,9 @@ import android.os.Vibrator;
 
 import com.geosiege.common.effects.Effects;
 import com.geosiege.common.util.ResourceLoader;
+import com.geosiege.game.level.EnemyStockpile;
+import com.geosiege.game.level.Level;
+import com.geosiege.game.resources.GameResources;
 import com.geosiege.game.ships.PlayerShip;
 
 public class GameState {
@@ -30,16 +33,19 @@ public class GameState {
   public static Vibrator vibrator = null;
   public static Player player = null;
   public static PlayerShip playerShip = null;
+  public static EnemyStockpile enemyStockpile = null;
   public static Map map = null;
   public static Camera camera = null;
   public static Effects effects = null;
   public static Context context = null;
   public static Activity activity;
+  public static Level level = null;
   
   public static void setup(Activity activity) {
     GameState.activity = activity;
     GameState.context = activity.getApplicationContext();
     ResourceLoader.init(context);
+    GameResources.load();
     GameState.vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
   }
   

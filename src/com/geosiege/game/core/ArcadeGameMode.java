@@ -16,6 +16,8 @@
 
 package com.geosiege.game.core;
 
+import java.io.IOException;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,9 +31,13 @@ import com.geosiege.common.effects.Effects;
 import com.geosiege.common.ui.JoystickControl;
 import com.geosiege.common.ui.ProgressBar;
 import com.geosiege.common.ui.TrackballControl;
+import com.geosiege.game.level.EnemyStockpile;
+import com.geosiege.game.level.LevelLoader;
 import com.geosiege.game.menu.MainMenuGameMode;
 import com.geosiege.game.resources.GameResources;
+import com.geosiege.game.ships.DeathStar;
 import com.geosiege.game.ships.PlayerShip;
+import com.geosiege.game.ships.SimpleEnemyShip;
 
 public class ArcadeGameMode extends GameMode {
   
@@ -61,7 +67,15 @@ public class ArcadeGameMode extends GameMode {
     textPaint.setColor(Color.WHITE);
     
     // Setup the world.
-    GameState.map = new Map();
+    GameState.enemyStockpile = new EnemyStockpile();
+    LevelLoader loader = new LevelLoader(GameState.enemyStockpile);
+    try {
+      GameState.level = loader.loadLevel("levels/1.txt");
+    } catch (IOException e) {
+      throw new RuntimeException("Unable load load level!", e);
+    }
+    
+    GameState.map = GameState.level.map;
     CollisionManager.setup(GameState.map.width, GameState.map.height);
     CollisionManager.get().setCustomCollisionCheck(new GeoCustomCollisionCheck());
     
@@ -71,6 +85,7 @@ public class ArcadeGameMode extends GameMode {
     GameState.playerShip.gameMode = this;
     GameState.map.popuplate();
     GameState.effects = Effects.get();
+    populateEnemyStockpile(GameState.enemyStockpile);
     
     // Create a camera to look at the world
     GameState.camera = new Camera(GameState.playerShip.x, GameState.playerShip.y);
@@ -87,6 +102,11 @@ public class ArcadeGameMode extends GameMode {
     initalized = true;
   }
   
+  private void populateEnemyStockpile(EnemyStockpile enemyStockpile) {
+    enemyStockpile.createSupply(SimpleEnemyShip.class, 100);
+    enemyStockpile.createSupply(DeathStar.class, 50);
+  }
+  
   public void endGame() {
     updater.handler.sendEmptyMessage(1);
   }
@@ -95,7 +115,9 @@ public class ArcadeGameMode extends GameMode {
   public void draw(Canvas c) {
     GameState.camera.apply(c);
     
+    GameState.level.draw(c);
     GameState.map.draw(c);
+    GameState.enemyStockpile.draw(c);
     GameState.playerShip.draw(c);
     GameState.effects.draw(c);
     
@@ -116,7 +138,9 @@ public class ArcadeGameMode extends GameMode {
     //if (pause) 
     //  return;
     
+    GameState.level.update(time);
     GameState.map.update(time);
+    GameState.enemyStockpile.update(time);
     GameState.playerShip.update(time);
     GameState.effects.update(time);
     

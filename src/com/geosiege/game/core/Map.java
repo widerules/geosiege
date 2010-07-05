@@ -16,11 +16,6 @@
 
 package com.geosiege.game.core;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,37 +24,43 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 
 import com.geosiege.common.GameObject;
-import com.geosiege.game.Obstacle;
-import com.geosiege.game.ships.DeathStar;
-import com.geosiege.game.ships.EnemyShip;
-import com.geosiege.game.ships.SimpleEnemyShip;
 
 public class Map extends GameObject {
   
   public static Map map = null;
   
   private static final float EDGE_BUFFER = 100;
+  private static final float DEFAULT_WIDTH = 400;
+  private static final float DEFAULT_HEIGHT = 400;
   ScrollingBackgroundLayer background;
   
-  
-  public float width = 1000;
-  public float height = 1000;
+  public float width;
+  public float height;
   public float top;
   public float left;
   public float right;
   public float bottom;
-  
-  List<Obstacle> obstacles;
-  List<EnemyShip> ships;
+
   Path borderPath; 
   Paint paint;
   
-  EnemySpawner<SimpleEnemyShip> spawner;
-  EnemySpawner<DeathStar> deathSpawner;
-
-  
   public Map() {
+    paint = new Paint();
+    paint.setStyle(Style.STROKE);
+    paint.setStrokeWidth(3);
+    paint.setStrokeJoin(Join.MITER);
+    paint.setColor(Color.WHITE);
+
+    map = this;
     
+    background = new ScrollingBackgroundLayer(this);
+    
+    setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  }
+  
+  public void setSize(float width, float height) {
+    this.width = width;
+    this.height = height;
     top = 0 + EDGE_BUFFER;
     left = 0 + EDGE_BUFFER;
     right = left + width; 
@@ -71,26 +72,35 @@ public class Map extends GameObject {
     borderPath.lineTo(right, bottom);
     borderPath.lineTo(left, bottom);
     borderPath.lineTo(left, top);
-    
-    paint = new Paint();
-    paint.setStyle(Style.STROKE);
-    paint.setStrokeWidth(3);
-    paint.setStrokeJoin(Join.MITER);
-    paint.setColor(Color.WHITE);
-
-    map = this;
-    
-    background = new ScrollingBackgroundLayer(this);
-    
-    spawner = new EnemySpawner<SimpleEnemyShip>(SimpleEnemyShip.class, 30, 4000, 1000, 50 * 1000);
-    deathSpawner = new EnemySpawner<DeathStar>(DeathStar.class, 10, 7000, 1000, 60 * 1000);
-    
-    spawner.setSpawn(600, 600, 400, 400);
-    deathSpawner.setSpawn(600, 600, 400, 400);
   }
   
   public void popuplate() {
-    obstacles = new ArrayList<Obstacle>();
+    
+  }
+  
+  public void update(long time) {
+    background.update(time);
+  }
+  
+  public void draw(Canvas c) {
+    background.draw(c);
+    c.drawPath(borderPath, paint);
+  }
+}
+
+/*
+ * 
+ * 
+  
+  List<Obstacle> obstacles;
+  List<EnemyShip> ships;
+  EnemySpawner<SimpleEnemyShip> spawner;
+  EnemySpawner<DeathStar> deathSpawner;
+  
+ */
+
+/*
+ * obstacles = new ArrayList<Obstacle>();
     Obstacle temp;
     Random rand = new Random();
     for ( int i = 0 ; i < 0 ; i++) {
@@ -104,12 +114,10 @@ public class Map extends GameObject {
     
     spawner.init();
     deathSpawner.init();
-  }
-  
-  public void update(long time) {
-    background.update(time);
-    
-    Obstacle obstacle; 
+*/
+
+/*
+ * Obstacle obstacle; 
     Iterator<Obstacle> iterator = obstacles.iterator();
     while (iterator.hasNext()) {
       obstacle = iterator.next();
@@ -119,12 +127,11 @@ public class Map extends GameObject {
     }
     
     spawner.update(time);
-    deathSpawner.update(time);
-  }
-  
-  public void draw(Canvas c) {
-    background.draw(c);
-    c.drawPath(borderPath, paint);
+    deathSpawner.update(time); 
+*/
+
+/*
+ * c.drawPath(borderPath, paint);
     
     for (GameObject obstacle : obstacles) {
       if (obstacle.active) {
@@ -134,5 +141,5 @@ public class Map extends GameObject {
     
     spawner.draw(c);
     deathSpawner.draw(c);
-  }
-}
+    
+*/
