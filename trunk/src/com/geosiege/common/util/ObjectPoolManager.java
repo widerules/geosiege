@@ -75,6 +75,8 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
         try {
           T gameObject = clazz.newInstance();
           gameObject.active = false;
+          gameObject.taken = false;
+          gameObject.canRecycle = false;
           return gameObject;
         } catch (IllegalAccessException e) {
           e.printStackTrace();
@@ -96,7 +98,11 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
    * be restored to the pool once it's active property is set to false.
    */
   public T take() {
-    return pool.take();
+    T obj = pool.take();
+    if (obj != null) {
+      obj.taken = true;
+    }
+    return obj;
   }
   
   /**
@@ -126,6 +132,7 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
         pool.restore(gameObject);
         gameObject.active = false;
         gameObject.canRecycle = false;
+        gameObject.taken = false;
       }
     }
   }
@@ -144,9 +151,10 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
    */
   public void reclaimPool() {
     for ( int i = 0 ; i < pool.items.length ; i++) {
-      if (pool.items[i].active) {
+      if (pool.items[i].taken) {
         pool.items[i].active = false;
         pool.items[i].canRecycle = false;
+        pool.items[i].taken = false;
         pool.restore(pool.items[i]);
       }
     }
