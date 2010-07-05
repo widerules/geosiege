@@ -20,20 +20,16 @@ import android.graphics.Canvas;
 
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.animation.Transitions;
+import com.geosiege.common.util.Countdown;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;
 
 
 public class EnemyShip extends Ship {
-   
-  //public boolean killed;
   
-  protected static final long TIME_TO_SPAWN = 3000;
-  
+  Countdown spawnCountdown = new Countdown(0);
   public int exp = 1;
-  public boolean spawning = false;
-  public long spawnTime;
 
   public EnemyShip(float x, float y) {
     super(x, y);
@@ -41,42 +37,44 @@ public class EnemyShip extends Ship {
   
   public void reset() {
     enable();
-    spawning = false;
   }
   
-  public void spawn(float x, float y) {
+  public void spawn(float x, float y, int spawnTime) {
     reset();
     this.x = x;
     this.y = y;
-    spawning = true;
-    spawnTime = System.currentTimeMillis();
+
+    spawnCountdown.reset(spawnTime);
+    spawnCountdown.start();
     
     // Start a spawning effect.
-    GameState.effects.implode(x, y, TIME_TO_SPAWN);
-  }
-  
-  private void handleSpawning() {
-    if (System.currentTimeMillis() > spawnTime + TIME_TO_SPAWN) {
-      spawning = false;
-    }
+    GameState.effects.implode(x, y, spawnTime);
   }
   
   public void update(long time) {
-    handleSpawning();
-    if (spawning)
-      return;
     
+    if (isSpawning()) {
+      // Countdown to see if we are done.
+      spawnCountdown.update(time);
+      
+      // If the spawn is complete, allow updates, otherwise quit.
+      if (spawnCountdown.done) {
+        spawnCountdown.reset();
+      } else {
+        return;
+      }
+    }
+  
     super.update(time);
   }
   
   public void draw(Canvas canvas) {
     super.draw(canvas);
     
-    if (spawning) {
-      paint.setAlpha((int) (255 * Transitions.getProgress(
-          Transitions.EXPONENTIAL,
-          (double) (System.currentTimeMillis() - spawnTime) /
-              (double) TIME_TO_SPAWN)));
+    if (isSpawning()) {
+      paint.setAlpha((int) (
+          255 * Transitions.getProgress(
+              Transitions.EXPONENTIAL, spawnCountdown.getProgress())));
     } else {
       paint.setAlpha(255);
     }
@@ -91,6 +89,10 @@ public class EnemyShip extends Ship {
     }
   }
   
+  public boolean isSpawning() {
+    return spawnCountdown.counting;
+  }
+  
   public boolean isDead() {
     return !active;
   }
@@ -101,7 +103,7 @@ public class EnemyShip extends Ship {
     
     GameState.effects.explode(x, y);
     GameState.effects.explodeWithGravity(x, y, GameState.playerShip);
-    //GameState.player.addExp(exp);
+
     kill();
   }
 }
