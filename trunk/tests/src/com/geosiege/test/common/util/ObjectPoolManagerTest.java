@@ -77,6 +77,7 @@ public class ObjectPoolManagerTest extends AndroidTestCase {
     
     // Take an object from the pool and verify pool shrunk.
     MockGameObject gameObject = manager.take();
+    gameObject.active = true;
     assertEquals(POOL_SIZE - 1, manager.pool.numLeft());
     
     // "kill" the object.
