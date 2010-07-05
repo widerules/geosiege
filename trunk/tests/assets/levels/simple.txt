@@ -1,0 +1,7 @@
+LevelName:SimpleName
+
+Trigger:Delay
+SpawnDelay:50
+Pattern:
+[  ]
+[ x]
