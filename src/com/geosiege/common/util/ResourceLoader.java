@@ -16,7 +16,11 @@
 
 package com.geosiege.common.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -25,6 +29,9 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.util.Log;
 
 public class ResourceLoader {
   
@@ -33,8 +40,10 @@ public class ResourceLoader {
   public static Resources r; 
   public static Paint paint;
   public static AssetManager a;
+  public static Context c;
   
   public static void init(Context context) {
+    c = context;
     r = context.getResources();
     a = context.getAssets();
     paint = new Paint();
@@ -62,5 +71,47 @@ public class ResourceLoader {
   
   public static Typeface loadFont(String path) {
     return Typeface.createFromAsset(a, path);
+  }
+  
+  public static InputStream loadAsset(String path) throws IOException {
+    return c.getAssets().open(path);
+  }
+  
+  public static SoundPool createSoundPool(int size) {
+    return new SoundPool(size, AudioManager.STREAM_MUSIC, 1);
+  }
+  
+  public static int loadSound(SoundPool pool, int resourceId) {
+    try {
+      return pool.load(c, resourceId, 1);
+    } catch (Exception e) {
+      Log.e(ResourceLoader.class.getName(), e.getMessage());
+      return -1;
+    }
+  }
+  
+  public static int loadSound(SoundPool pool, String path) {
+    try {
+      AssetFileDescriptor file = a.openFd(path);
+      return pool.load(file, 1);
+    } catch (IOException e) {
+      Log.e(ResourceLoader.class.getName(), "Error loading sound: " + path);
+      return -1;
+    }
+  }
+  
+  public static void playSound(SoundPool pool, int soundID) {
+    // Full volume, no looping, regular rate.
+    playSound(pool, soundID, 0, 1);
+  }
+  
+  public static void playSound(SoundPool pool, int soundID, int loop, float rate) {
+    
+    AudioManager mgr = (AudioManager)c.getSystemService(Context.AUDIO_SERVICE);  
+    float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);  
+    float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);      
+    float volume = streamVolumeCurrent / streamVolumeMax;  
+    
+    pool.play(soundID, volume, volume, 1, loop, rate);
   }
 }
