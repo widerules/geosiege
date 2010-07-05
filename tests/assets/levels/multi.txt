@@ -1,0 +1,31 @@
+LevelName:SimpleName
+
+Trigger:Delay
+SpawnDelay:50
+SpawnTime:100
+Pattern:
+[  ]
+[ x]
+
+Trigger:Delay
+SpawnDelay:0
+Pattern:
+[   ]
+[ x ]
+[   ]
+
+Trigger:LastDead
+SpawnDelay:0
+Pattern:
+[x x]
+[   ]
+[   ]
+
+Trigger:LastDeadRatio
+DeadRatio:.50
+SpawnDelay:50
+Scale:100
+Pattern:
+[ x ]
+[ p ]
+[ x ]

@@ -1,0 +1,7 @@
+LevelName:SimpleName
+
+Trigger:Delay
+Random:Blah!
+Pattern:
+[  ]
+[ x]
