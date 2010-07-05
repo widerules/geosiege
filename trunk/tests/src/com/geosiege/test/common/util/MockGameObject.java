@@ -16,7 +16,7 @@ public class MockGameObject extends GameObject {
   public void update(long time) {
     updateCalled = true;
     if (dieOnUpdate) {
-      active = false;
+      kill();
     }
   }
 }
