@@ -161,7 +161,7 @@ public class Updater {
         update();
         draw();
       } catch (Exception e) {
-        Log.i("zeddic", "Update Exception: " + e.toString());
+        Log.i("zeddic", "Update Exception", e);
       }
     }    
   }
