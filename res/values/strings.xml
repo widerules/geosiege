@@ -2,4 +2,22 @@
 <resources>
     
     <string name="app_name">Geo Siege</string>
+<string name="preference_title">Geo Siege Settings</string>
+<string name="preference_input_location">Joystick Locations</string>
+<string name="preference_input_location_summary">Where should the joysticks be?</string>
+<string-array name="preference_input_location_options"><item>Top Left and Bottom Right</item>
+<item>Bottom Left and Top Right</item>
+<item>Both on Bottom (No HTC Phone Support)</item>
+</string-array>
+
+<string name="preference_input_location_dialog">Joystick Locations</string>
+<string-array name="preference_input_location_option_values"><item>1</item>
+<item>2</item>
+<item>3</item>
+</string-array>
+
+<string name="preference_swap_joysticks">Swap Joysticks</string>
+<string name="preference_swap_joysticks_on">Fire on the left. Move on the right.</string>
+<string name="preference_swap_joysticks_off">Move on the left. Fire on the right.</string>
+<string name="preference_show_fps">Show FPS</string>
 </resources>
