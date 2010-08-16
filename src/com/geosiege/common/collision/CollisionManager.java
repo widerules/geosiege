@@ -91,7 +91,7 @@ public class CollisionManager {
    * Creates a new collision manager for a world of the specific size.
    */
   private CollisionManager(float width, float height) {
-    grid = new CollisionGrid(width + GRID_SIZE, height + GRID_SIZE, GRID_SIZE);
+    grid = new CollisionGrid(width + GRID_SIZE * 2, height + GRID_SIZE * 2, GRID_SIZE);
   }
   
   /**
