@@ -72,9 +72,8 @@ public class EnemyShip extends Ship {
     super.draw(canvas);
     
     if (isSpawning()) {
-      paint.setAlpha((int) (
-          255 * Transitions.getProgress(
-              Transitions.EXPONENTIAL, spawnCountdown.getProgress())));
+      paint.setAlpha((int) (255 * 
+          Transitions.getProgress(Transitions.EXPONENTIAL, spawnCountdown.getProgress())));
     } else {
       paint.setAlpha(255);
     }
@@ -103,7 +102,8 @@ public class EnemyShip extends Ship {
     
     GameState.effects.explode(x, y);
     GameState.effects.explodeWithGravity(x, y, GameState.playerShip);
-
+    GameState.stats.recordKill();
+    
     kill();
   }
 }

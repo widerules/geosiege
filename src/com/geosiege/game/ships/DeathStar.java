@@ -24,9 +24,12 @@ import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
 import com.geosiege.common.util.Bounds;
 import com.geosiege.common.util.Circle;
+import com.geosiege.common.util.ComponentManager;
 import com.geosiege.common.util.Polygon;
 import com.geosiege.common.util.Polygon.PolygonBuilder;
+import com.geosiege.game.MapBoundsComponent;
 import com.geosiege.game.SimplePathComponent;
+import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Gun;
 
@@ -34,16 +37,16 @@ public class DeathStar extends EnemyShip {
 
   
   ////SETUP OBJECT SHAPE AND PAINT
-  private static Paint commonPaint;
-  private static Polygon commonPolygon;
-  private static float ANGLE_OFFSET = -90;
+  private static final Paint PAINT;
+  private static final Polygon SHAPE;
+  private static final float ANGLE_OFFSET = -90;
   static {
-    commonPaint = new Paint();
-    commonPaint.setColor(Color.argb(255, 227, 20, 220));
-    commonPaint.setStyle(Paint.Style.STROKE);
-    commonPaint.setStrokeWidth(2);
+    PAINT = new Paint();
+    PAINT.setColor(Color.argb(255, 227, 20, 220));
+    PAINT.setStyle(Paint.Style.STROKE);
+    PAINT.setStrokeWidth(2);
     
-    commonPolygon = new PolygonBuilder()
+    SHAPE = new PolygonBuilder()
         .add(-3, -3)
         .add(0, -9)
         .add(3, -3)
@@ -57,8 +60,8 @@ public class DeathStar extends EnemyShip {
         .build();
   }
   
-  
-  public Gun gun;
+  private ComponentManager components;
+  private Gun gun;
   
   public DeathStar() {
     this(0, 0);
@@ -68,18 +71,19 @@ public class DeathStar extends EnemyShip {
   public DeathStar(float x, float y) {
     super(x, y);
     
+    this.paint = PAINT;
     this.setScale(2);
     this.rotation = 20f;
-    
-    paint = commonPaint;
-    bounds = new Bounds(new Circle(10));
+    this.bounds = new Bounds(new Circle(10));
     
     gun = Arsenal.getDeathBlossom(this);
     gun.setAutoFire(true);
     
-    addComponent(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
-    addComponent(new SimplePathComponent(this, PlayerShip.ship, 100));
-    addComponent(gun); 
+    components = new ComponentManager(this);
+    components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
+    components.add(new SimplePathComponent(this, GameState.playerShip, 100));
+    components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
+    components.add(gun); 
   }
   
   @Override
@@ -94,19 +98,24 @@ public class DeathStar extends EnemyShip {
   }
   
   @Override
+  public void update(long time) {
+    super.update(time);
+    if (!isSpawning())
+      components.update(time);
+  }
+  
+  @Override
   public void draw(Canvas canvas) {
     
     super.draw(canvas);
     
     canvas.save();
-
     canvas.translate(x, y);
     canvas.rotate(getAngleOffset() + angle);
     canvas.scale(scale, scale);
-    
-    canvas.drawPath(commonPolygon.path, paint);
+    canvas.drawPath(SHAPE.path, paint);
     canvas.restore();
     
-    // super.drawBounds(canvas);
+    components.draw(canvas);
   }
 }
