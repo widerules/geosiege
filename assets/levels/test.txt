@@ -1,0 +1,353 @@
+LevelName:Level 1
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:4000
+SpawnTime:2000
+Scale:200
+Pattern:
+[x         x]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[x         x]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:2000
+SpawnTime:2000
+Scale:200
+Pattern:
+[     x     ]
+[           ]
+[           ]
+[           ]
+[x         x]
+[           ]
+[           ]
+[           ]
+[     x     ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:2000
+SpawnTime:2000
+Scale:200
+Pattern:
+[    xxx    ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[    xxx    ]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:4000
+SpawnTime:2000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[x x     x x]
+[x x     x x]
+[x x     x x]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.80
+SpawnDelay:3000
+SpawnTime:2000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[     x     ]
+[   xxxxx   ]
+[     x     ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:2000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[     x     ]
+[     x     ]
+[   xx*xx   ]
+[     x     ]
+[     x     ]
+[           ]
+[           ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.80
+SpawnDelay:0
+SpawnTime:2000
+Scale:200
+Pattern:
+[  x       x]
+[  x      x ]
+[xxx     x  ]
+[       x   ]
+[           ]
+[   x       ]
+[  x     xxx]
+[ x      x  ]
+[x       x  ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.80
+SpawnDelay:0
+SpawnTime:2000
+Scale:200
+Pattern:
+[*          ]
+[           ]
+[     x     ]
+[    x x    ]
+[   x * x   ]
+[    x x    ]
+[     x     ]
+[           ]
+[          *]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:5000
+SpawnTime:2000
+Scale:200
+Pattern:
+[   xxxxx   ]
+[           ]
+[           ]
+[     x     ]
+[     x     ]
+[     x     ]
+[           ]
+[           ]
+[   xxxxx   ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.80
+SpawnDelay:0
+SpawnTime:2000
+Scale:200
+Pattern:
+[   x       ]
+[   x       ]
+[   x       ]
+[   x       ]
+[   x       ]
+[   x       ]
+[   x       ]
+[   x       ]
+[   x       ]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:2000
+SpawnTime:2000
+Scale:200
+Pattern:
+[     x     ]
+[     x     ]
+[     x     ]
+[     x     ]
+[     x     ]
+[     x     ]
+[     x     ]
+[     x     ]
+[     x     ]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:2000
+SpawnTime:2000
+Scale:200
+Pattern:
+[       x   ]
+[       x   ]
+[       x   ]
+[       x   ]
+[       x   ]
+[       x   ]
+[       x   ]
+[       x   ]
+[       x   ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:2000
+Scale:200
+Pattern:
+[*         *]
+[           ]
+[           ]
+[           ]
+[     *     ]
+[           ]
+[           ]
+[           ]
+[*         *]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:2000
+Scale:200
+Pattern:
+[xxx        ]
+[x x        ]
+[xxx        ]
+[           ]
+[           ]
+[           ]
+[        xxx]
+[        x x]
+[        xxx]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:5000
+SpawnTime:4000
+Scale:200
+Pattern:
+[x         x]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[x         x]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:4000
+Scale:200
+Pattern:
+[ x       x ]
+[xx       xx]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[xx       xx]
+[ x       x ]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:4000
+Scale:200
+Pattern:
+[  x     x  ]
+[  x     x  ]
+[xxx     xxx]
+[           ]
+[           ]
+[           ]
+[xxx     xxx]
+[  x     x  ]
+[  x     x  ]
+
+Trigger:LastDead
+DeadRatio:0.60
+SpawnDelay:2000
+SpawnTime:2000
+Scale:200
+Pattern:
+[     x     ]
+[     x     ]
+[     x     ]
+[     *     ]
+[xxxx*x*xxxx]
+[     *     ]
+[     x     ]
+[     x     ]
+[     x     ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.60
+SpawnDelay:2000
+SpawnTime:4000
+Scale:200
+Pattern:
+[   x   x   ]
+[   x   x   ]
+[   x   x   ]
+[xxxx   xxxx]
+[           ]
+[xxxx   xxxx]
+[   x   x   ]
+[   x   x   ]
+[   x   x   ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:2000
+SpawnTime:5000
+Scale:200
+Pattern:
+[*xx**x**xx*]
+[x         x]
+[x         x]
+[*         *]
+[x         x]
+[*         *]
+[x         x]
+[x         x]
+[*xx**x**xx*]
+
+Trigger:LastDeadRatio
+DeadRatio:0.90
+SpawnDelay:1000
+SpawnTime:2000
+Scale:200
+Pattern:
+[           ]
+[    xxx    ]
+[  x     x  ]
+[  x *** x  ]
+[  x * * x  ]
+[  x *** x  ]
+[  x     x  ]
+[    xxx    ]
+[           ]
+
+Trigger:LastDeadRatio
+DeadRatio:0.90
+SpawnDelay:1000
+SpawnTime:2000
+Scale:200
+Pattern:
+[***********]
+[           ]
+[           ]
+[   *****   ]
+[   *xxx*   ]
+[   *****   ]
+[           ]
+[           ]
+[***********]
