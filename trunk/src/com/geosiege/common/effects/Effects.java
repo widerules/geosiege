@@ -41,7 +41,6 @@ public class Effects extends GameObject {
   }
   
   private void createPools() {
-    
     regularExplosions = new ObjectPoolManager<Explosion>(Explosion.class);
     hitExplosions = new ObjectPoolManager<HitExplosion>(HitExplosion.class);
     gravityExplosions = new ObjectPoolManager<GravityExplosion>(GravityExplosion.class);
@@ -100,6 +99,13 @@ public class Effects extends GameObject {
     implosion.ignite();
     
     return implosion;
+  }
+  
+  public void reset() {
+    regularExplosions.reclaimPool();
+    hitExplosions.reclaimPool();
+    gravityExplosions.reclaimPool();
+    spawnImplosions.reclaimPool();
   }
   
   public void draw(Canvas canvas) {
