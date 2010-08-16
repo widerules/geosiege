@@ -24,9 +24,12 @@ import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
 import com.geosiege.common.util.Bounds;
 import com.geosiege.common.util.Circle;
+import com.geosiege.common.util.ComponentManager;
 import com.geosiege.common.util.Polygon;
 import com.geosiege.common.util.Polygon.PolygonBuilder;
+import com.geosiege.game.MapBoundsComponent;
 import com.geosiege.game.SimplePathComponent;
+import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Gun;
 import com.geosiege.game.guns.control.AimingGunControl;
@@ -34,24 +37,24 @@ import com.geosiege.game.guns.control.AimingGunControl;
 public class SimpleEnemyShip extends EnemyShip {
 
   //// SETUP OBJECT SHAPE AND PAINT
-  private static Paint commonPaint;
-  private static Polygon commonPolygon;
+  private static final Paint PAINT;
+  private static final Polygon SHAPE;
   static {
-    commonPaint = new Paint();
-    commonPaint.setColor(Color.GREEN);
-    commonPaint.setStyle(Paint.Style.STROKE);
-    commonPaint.setStrokeWidth(2);
+    PAINT = new Paint();
+    PAINT.setColor(Color.GREEN);
+    PAINT.setStyle(Paint.Style.STROKE);
+    PAINT.setStrokeWidth(2);
     
-    commonPolygon = new PolygonBuilder()
+    SHAPE = new PolygonBuilder()
         .add(0, -20)
         .add(10, 0)
         .add(0, 20)
         .add(-10, 0)
         .build();
   }
-  
 
-  public Gun gun;
+  private Gun gun;
+  private ComponentManager components;
   
   public SimpleEnemyShip() {
     this(0, 0);
@@ -61,18 +64,20 @@ public class SimpleEnemyShip extends EnemyShip {
   public SimpleEnemyShip(float x, float y) {
     super(x, y);
     
-    this.paint = commonPaint;
+    paint = PAINT;
     bounds = new Bounds(new Circle(15));
     
     gun = Arsenal.getPeaShooter(this);
-    gun.setGunControl(new AimingGunControl(this, PlayerShip.ship, 200, 25));
+    gun.setGunControl(new AimingGunControl(this, GameState.playerShip, 200, 25));
     gun.setAutoFire(true);
     gun.setBulletSpeed(70);
     gun.setFireCooldown(800);
     
-    addComponent(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
-    addComponent(new SimplePathComponent(this, PlayerShip.ship, 100));
-    addComponent(gun);
+    components = new ComponentManager(this);
+    components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
+    components.add(new SimplePathComponent(this, GameState.playerShip, 100));
+    components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
+    components.add(gun);
   }
   
   @Override
@@ -81,19 +86,25 @@ public class SimpleEnemyShip extends EnemyShip {
     gun.reset();
   }
   
+  @Override
+  public void update(long time) {
+    super.update(time);
+    if (!isSpawning())
+      components.update(time);
+  }
   
   @Override
   public void draw(Canvas canvas) {
     
     super.draw(canvas);
-    //super.drawBounds(canvas);
-    canvas.save();
 
+    canvas.save();
     canvas.translate(x, y);
     canvas.rotate(getAngleOffset() + angle);
     canvas.scale(scale, scale);
-    
-    canvas.drawPath(commonPolygon.path, paint);
+    canvas.drawPath(SHAPE.path, paint);
     canvas.restore();
+    
+    components.draw(canvas);
   }
 }

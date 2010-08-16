@@ -29,12 +29,12 @@ import com.geosiege.common.particle.ParticleEmitter;
 import com.geosiege.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 import com.geosiege.common.util.Bounds;
 import com.geosiege.common.util.Circle;
+import com.geosiege.common.util.ComponentManager;
+import com.geosiege.common.util.Countdown;
 import com.geosiege.common.util.Polygon;
-import com.geosiege.common.util.RandomUtil;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.common.util.Polygon.PolygonBuilder;
 import com.geosiege.game.MapBoundsComponent;
-import com.geosiege.game.core.ArcadeGameMode;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Bullet;
@@ -42,19 +42,17 @@ import com.geosiege.game.guns.Gun;
 
 public class PlayerShip extends Ship {
   
-  //// SETUP OBJECT SHAPE AND PAINT
-  private static Paint commonPaint;
-  private static Polygon commonPolygon;
+  private static final long TIME_TO_WATCH_DEATH = 0;
+  private static final Paint PAINT;
+  private static final Polygon SHAPE;
   private static float ANGLE_OFFSET = -90;
   static {
-    commonPaint = new Paint();
-    commonPaint.setColor(Color.BLUE);
-    commonPaint.setStyle(Paint.Style.STROKE);
-    commonPaint.setStrokeWidth(3);
-    // paint.setMaskFilter(new BlurMaskFilter(1, BlurMaskFilter.Blur.OUTER));
-    // blurFilter = new BlurMaskFilter(18, BlurMaskFilter.Blur.NORMAL);
+    PAINT = new Paint();
+    PAINT.setColor(Color.BLUE);
+    PAINT.setStyle(Paint.Style.STROKE);
+    PAINT.setStrokeWidth(3);
 
-    commonPolygon = new PolygonBuilder()
+    SHAPE = new PolygonBuilder()
         .add(0, 17)
         .add(12, -8)
         .add(0, -16)
@@ -62,36 +60,27 @@ public class PlayerShip extends Ship {
         .build();
   }
   
-  private static final long TIME_TO_WATCH_DEATH = 0;
-  private static final long TIME_BETWEEN_DEATH_EXPLOSIONS = 100;
+  private ParticleEmitter emitter;
+  private Gun gun;
+  private ComponentManager components;
+  private boolean dying;
+  private boolean dead;
+  private Countdown dyingCountdown;
   
-  public ArcadeGameMode gameMode;
-  
-  ParticleEmitter emitter;
-  Gun gun;
-  
-  public static PlayerShip ship;
-  MapBoundsComponent boundsComponent;
-  
-  boolean dying;
-  boolean dead;
-  long deadWait;
-  long dieExplodeWait;
+  public PlayerShip() {
+    this(0, 0);
+  }
   
   public PlayerShip(float x, float y) {
     super(x, y);
     
+    dyingCountdown = new Countdown(TIME_TO_WATCH_DEATH);
     dying = false;
     dead = false;
-    deadWait = 0;
-    dieExplodeWait = 0;
     health = GameState.player.maxHealth;
-    paint = new Paint(commonPaint);
+    paint = new Paint(PAINT);
     setBounds(new Bounds(new Circle(8)));
-    
-    addComponent(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
-    boundsComponent = new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE);
-    
+
     emitter = new ParticleEmitterBuilder()
         .at(x, y)
         .withEmitMode(ParticleEmitter.MODE_DIRECTIONAL)
@@ -108,14 +97,23 @@ public class PlayerShip extends Ship {
     gun.setFireCooldown(200);
     gun.setBulletSpeed(150);
     gun.setFireOffset(40);
-    //gun.fireCooldown = 200;
-    //gun.bulletSpeed = 110f;
-    //gun.fireOffset = 40;
-    //gun.control = new DirectionalGunControl(this, 0);
     
-    addComponent(gun);
+    components = new ComponentManager(this);
+    components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
+    components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
+    components.add(gun);
+  }
+  
+  public void reset() {
+    dyingCountdown.reset();
+    dying = false;
+    dead = false;
+    health = GameState.player.maxHealth;
+    gun.reset();
     
-    ship = this;
+    paint.setColor(Color.BLUE);
+    paint.setStyle(Paint.Style.STROKE);
+    paint.setStrokeWidth(3);
   }
   
   public void setAngle(float angle) {
@@ -124,21 +122,21 @@ public class PlayerShip extends Ship {
     }
   }
   
+  public void centerOnMap() {
+    this.x = GameState.level.map.left + GameState.level.map.width / 2;
+    this.y = GameState.level.map.top + GameState.level.map.height / 2;
+  }
+  
+  @Override
   public void update(long time) {
     
-    if (dying || dead) {
-
-      deadWait += time;
-      dieExplodeWait += time;
-      
-      if (dieExplodeWait > TIME_BETWEEN_DEATH_EXPLOSIONS) {
-        GameState.effects.explode(x + RandomUtil.nextFloat(10), y + RandomUtil.nextFloat(10));
-        dieExplodeWait = 0;
-      }
-      
-      if (!dead && deadWait > TIME_TO_WATCH_DEATH) {
+    if (dead)
+      return;
+    
+    if (dying) {
+      dyingCountdown.update(time);
+      if (dyingCountdown.isDone()) {
         dead = true;
-        gameMode.endGame();
       }
       return;
     }
@@ -148,13 +146,11 @@ public class PlayerShip extends Ship {
     emitter.x = x;
     emitter.y = y;
     emitter.emitAngle = angle + 180;
-    //emitter.update(time);
-    //emitter.setEmitRate((long)((velocity.x * velocity.x + velocity.y * velocity.y) * 60 / 20000));
-
-    boundsComponent.update(time);
     
+    components.update(time);
   }
   
+  @Override
   public void draw(Canvas canvas) {
     
     if (dying || dead) {
@@ -170,8 +166,10 @@ public class PlayerShip extends Ship {
     canvas.rotate(getAngleOffset() + angle);
     canvas.scale(scale, scale);
     
-    canvas.drawPath(commonPolygon.path, paint);
+    canvas.drawPath(SHAPE.path, paint);
     canvas.restore();
+    
+    components.draw(canvas);
   }
   
   public void fire() {
@@ -181,6 +179,14 @@ public class PlayerShip extends Ship {
   public void fire(float angle) {
     gun.setAimAngle(angle);    
     gun.fire();
+  }
+  
+  public boolean isDead() {
+    return dead;
+  }
+  
+  public boolean isDying() {
+    return dying;
   }
   
   @Override
@@ -194,6 +200,7 @@ public class PlayerShip extends Ship {
       if (health < 0) {
         health = 0;
         GameState.effects.hit(x, y, avoidVector);
+        dyingCountdown.start();
         dying = true;
       }
     } else if (object instanceof MoneyParticle) {

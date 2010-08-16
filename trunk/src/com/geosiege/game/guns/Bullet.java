@@ -25,6 +25,7 @@ import com.geosiege.common.collision.CollisionComponent;
 import com.geosiege.common.collision.CollisionManager;
 import com.geosiege.common.util.Bounds;
 import com.geosiege.common.util.Circle;
+import com.geosiege.common.util.ComponentManager;
 import com.geosiege.common.util.Shape;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.MapBoundsComponent;
@@ -36,35 +37,36 @@ public class Bullet extends PhysicalObject {
   private static final long DEFAULT_MAX_LIFE = 4000;
   
   ////SETUP OBJECT SHAPE AND PAINT
-  private static Paint commonPaint;
-  private static Shape commonShape;
+  private static final Paint PAINT;
+  private static final Shape SHAPE;
   private static float ANGLE_OFFSET = 0;
   static {
-    commonPaint = new Paint();
-    commonPaint.setColor(Color.YELLOW);
-    commonPaint.setStyle(Paint.Style.FILL);
-    commonPaint.setStrokeWidth(4);
+    PAINT = new Paint();
+    PAINT.setColor(Color.YELLOW);
+    PAINT.setStyle(Paint.Style.FILL);
+    PAINT.setStrokeWidth(4);
     
-    commonShape = new Circle(4);
+    SHAPE = new Circle(4);
   }
 
   public long life; 
   public long maxLife;
   public boolean firedByEnemy = false;
   
+  private ComponentManager components;
+  
   MapBoundsComponent boundsCheck; 
   
   public Bullet(float x, float y) {
     super(x, y);
-    
-    paint = commonPaint;
-    bounds = new Bounds(commonShape);
+
+    bounds = new Bounds(SHAPE);
     life = 0;
     maxLife = DEFAULT_MAX_LIFE;
     
-    addComponent(new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY));
-
-    boundsCheck = new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE);
+    components = new ComponentManager(this);
+    components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY));
+    components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
   }
   
   public void reset() {
@@ -73,19 +75,19 @@ public class Bullet extends PhysicalObject {
     canRecycle = false;
   }
   
+  @Override
   public void draw(Canvas canvas) {
     super.draw(canvas);
-    
-    
   
     //canvas.save();
     //canvas.translate(x, y);
     //canvas.rotate((ANGLE_OFFSET + angle));
-    canvas.drawLine(x, y, x + -velocity.x / 6, y + -velocity.y / 6, paint);
+    canvas.drawLine(x, y, x + -velocity.x / 6, y + -velocity.y / 6, PAINT);
     //canvas.drawCircle(0, 0, bounds.shape.radius, paint);
     //canvas.restore();
   }
   
+  @Override
   public void update(long time) {
     super.update(time);
     life += time;
@@ -93,7 +95,7 @@ public class Bullet extends PhysicalObject {
       kill();
     }
     
-    boundsCheck.update(time);
+    components.update(time);
   }
   
   public void offset(float distance) {
