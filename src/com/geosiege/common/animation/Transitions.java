@@ -50,11 +50,6 @@ public class Transitions {
    */
   public static final int SPRING = 5;
 
-  /**
-   * Gets 
-   * @param transitionType
-   * @param timeProgress
-   */
   public static double getProgress(int transitionType, double timeProgress) {
  
     switch (transitionType) {
