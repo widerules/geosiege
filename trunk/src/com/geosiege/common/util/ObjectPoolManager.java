@@ -1,6 +1,7 @@
 package com.geosiege.common.util;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.geosiege.common.GameObject;
 import com.geosiege.common.util.ObjectPool.ObjectBuilder;
@@ -79,9 +80,9 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
           gameObject.canRecycle = false;
           return gameObject;
         } catch (IllegalAccessException e) {
-          e.printStackTrace();
+          Log.e(ObjectPoolManager.class.getCanonicalName(), e.toString());
         } catch (InstantiationException e) {
-          e.printStackTrace();
+          Log.e(ObjectPoolManager.class.getCanonicalName(), e.toString());
         }
         
         return null;
