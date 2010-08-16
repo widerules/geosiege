@@ -1,12 +1,13 @@
-package com.geosiege.game;
+package com.geosiege.game.menu;
 
 import java.util.Arrays;
 import java.util.List;
 
+import com.geosiege.game.R;
+
 public class Levels {
   
   // TODO(scott@zeddic.com): Move these to a data file.
-  
   
   public static final MenuLevelGroup BETA_LEVELS = new MenuLevelGroup(
       "Beta Levels",

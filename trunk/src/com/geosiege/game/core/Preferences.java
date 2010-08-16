@@ -1,8 +1,7 @@
-package com.geosiege.game;
+package com.geosiege.game.core;
 
 import android.content.SharedPreferences;
 
-import com.geosiege.game.core.GameState;
 
 /**
  * Provides read-only access to preferences set from the preferences activity.

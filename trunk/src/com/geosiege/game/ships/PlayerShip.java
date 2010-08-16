@@ -34,7 +34,7 @@ import com.geosiege.common.util.Countdown;
 import com.geosiege.common.util.Polygon;
 import com.geosiege.common.util.Vector2d;
 import com.geosiege.common.util.Polygon.PolygonBuilder;
-import com.geosiege.game.MapBoundsComponent;
+import com.geosiege.game.components.MapBoundsComponent;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Bullet;

@@ -28,7 +28,7 @@ import com.geosiege.common.util.Circle;
 import com.geosiege.common.util.ComponentManager;
 import com.geosiege.common.util.Shape;
 import com.geosiege.common.util.Vector2d;
-import com.geosiege.game.MapBoundsComponent;
+import com.geosiege.game.components.MapBoundsComponent;
 import com.geosiege.game.core.GameState;
 
 

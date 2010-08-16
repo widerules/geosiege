@@ -34,6 +34,9 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.geosiege.common.ui.SeparatedListAdapter;
+import com.geosiege.game.menu.Levels;
+import com.geosiege.game.menu.MenuLevel;
+import com.geosiege.game.menu.MenuLevelGroup;
 
 public class LevelListActivity extends Activity {
   
