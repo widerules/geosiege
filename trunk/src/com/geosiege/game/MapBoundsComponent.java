@@ -26,7 +26,7 @@ import com.geosiege.game.core.Map;
  * A component that determines have an object should behave once it
  * gets to the edge of the map.
  * 
- * @author baileys
+ * @author scott@zeddic.com (Scott Bailey)
  */
 public class MapBoundsComponent extends Component {
   
@@ -43,32 +43,47 @@ public class MapBoundsComponent extends Component {
     this.behavior = behavior;
   }
   
-  
   Vector2d translation = new Vector2d(0, 0);
   public void update(long time) {
-    Map map = GameState.map;
+    Map map = GameState.level.map;
     hitHorizontal = false;
     hitVertical = false;
-    if (parent.x + parent.bounds.shape.radius > map.right ||
-        parent.x - parent.bounds.shape.radius < map.left) {
-      hitHorizontal = true;
-    }
-    if (parent.y + parent.bounds.shape.radius > map.bottom ||
-        parent.y - parent.bounds.shape.radius < map.top) {
-      hitVertical = true;
-    }
+   
+    // Calculate how much the 
+    float radius = parent.bounds.shape.radius;
     
-    if (hitHorizontal || hitVertical) {
-      float timeFraction = time / PhysicalObject.TIME_SCALER;
-      translation.x = hitHorizontal ? -parent.velocity.x * timeFraction : 0;
-      translation.y = hitVertical ? -parent.velocity.y * timeFraction : 0;
+    // Calculate how much the ship bounds have 'overstepped' the map edges.
+    // If any of these values are > 0, it means the object is out of bounds.
+    float topOverstep = (map.top) - (parent.y - radius);
+    float bottomOverstep = (parent.y + radius) - (map.bottom);
+    float leftOverstep = (map.left) - (parent.x - radius);
+    float rightOverstep = (parent.x + radius) - (map.right);
+    
+    // If it is out of bounds on any count, trigger a collision to get it
+    // back in bounds.
+    if (topOverstep > 0 || bottomOverstep > 0 || leftOverstep > 0 || rightOverstep > 0) {
+      
+      translation.y = 0;
+      if (topOverstep > 0) 
+        translation.y = topOverstep;
+      else if (bottomOverstep > 0)
+        translation.y = -bottomOverstep;
+      
+      translation.x = 0;
+      if (leftOverstep > 0)
+        translation.x = leftOverstep;
+      else if(rightOverstep >0)
+        translation.x = -rightOverstep;
+      
       parent.collide(null, translation);
     }
     
-    if (behavior == BEHAVIOR_BOUNCE && hitHorizontal)
+    // Hit horizontal and bouncing.
+    if (behavior == BEHAVIOR_BOUNCE && (leftOverstep > 0 || rightOverstep > 0))
       parent.velocity.x *= -1;
     
-    if (behavior == BEHAVIOR_BOUNCE && hitVertical)
+    // Hit vertical and bouncing.
+    if (behavior == BEHAVIOR_BOUNCE && (topOverstep > 0 || bottomOverstep >0))
       parent.velocity.y *= -1;
   }
 }

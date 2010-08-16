@@ -30,8 +30,9 @@ public class Map extends GameObject {
   public static Map map = null;
   
   private static final float EDGE_BUFFER = 100;
-  private static final float DEFAULT_WIDTH = 400;
-  private static final float DEFAULT_HEIGHT = 400;
+  private static final float SPAWN_BUFFER = 50;
+  private static final float DEFAULT_WIDTH = 900;
+  private static final float DEFAULT_HEIGHT = 600;
   ScrollingBackgroundLayer background;
   
   public float width;
@@ -40,6 +41,11 @@ public class Map extends GameObject {
   public float left;
   public float right;
   public float bottom;
+  
+  public float spawnLeft;
+  public float spawnTop;
+  public float spawnWidth;
+  public float spawnHeight;
 
   Path borderPath; 
   Paint paint;
@@ -66,6 +72,11 @@ public class Map extends GameObject {
     right = left + width; 
     bottom = top + height;
     
+    spawnLeft = left + SPAWN_BUFFER;
+    spawnTop = top + SPAWN_BUFFER;
+    spawnWidth = width - 2 * SPAWN_BUFFER;
+    spawnHeight = height - 2 * SPAWN_BUFFER;
+    
     borderPath = new Path();
     borderPath.moveTo(left, top);
     borderPath.lineTo(right, top);
@@ -74,8 +85,9 @@ public class Map extends GameObject {
     borderPath.lineTo(left, top);
   }
   
-  public void popuplate() {
-    
+  public boolean inSpawnableArea(float x, float y) {
+    return x >= spawnLeft && x <= spawnLeft + spawnWidth &&
+        y >= spawnTop && y <= spawnTop + spawnHeight;
   }
   
   public void update(long time) {
@@ -87,59 +99,3 @@ public class Map extends GameObject {
     c.drawPath(borderPath, paint);
   }
 }
-
-/*
- * 
- * 
-  
-  List<Obstacle> obstacles;
-  List<EnemyShip> ships;
-  EnemySpawner<SimpleEnemyShip> spawner;
-  EnemySpawner<DeathStar> deathSpawner;
-  
- */
-
-/*
- * obstacles = new ArrayList<Obstacle>();
-    Obstacle temp;
-    Random rand = new Random();
-    for ( int i = 0 ; i < 0 ; i++) {
-      temp = new Obstacle(EDGE_BUFFER + rand.nextFloat() * (width-500), EDGE_BUFFER + rand.nextFloat() * (height - 500));
-      temp.setAngle(rand.nextFloat() * 360);
-      temp.setVelocity(-5 + rand.nextFloat() * 10, -5 + rand.nextFloat() * 10);
-      temp.setScale(2f + rand.nextFloat() * 5);
-      temp.rotation = -.5f + rand.nextFloat() * .5f;
-      obstacles.add(temp);
-    }
-    
-    spawner.init();
-    deathSpawner.init();
-*/
-
-/*
- * Obstacle obstacle; 
-    Iterator<Obstacle> iterator = obstacles.iterator();
-    while (iterator.hasNext()) {
-      obstacle = iterator.next();
-      if (obstacle.active) {
-        obstacle.update(time);
-      }
-    }
-    
-    spawner.update(time);
-    deathSpawner.update(time); 
-*/
-
-/*
- * c.drawPath(borderPath, paint);
-    
-    for (GameObject obstacle : obstacles) {
-      if (obstacle.active) {
-        obstacle.draw(c);
-      }
-    }
-    
-    spawner.draw(c);
-    deathSpawner.draw(c);
-    
-*/

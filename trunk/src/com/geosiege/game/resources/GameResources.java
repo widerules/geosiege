@@ -18,6 +18,7 @@ package com.geosiege.game.resources;
 
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.SoundPool;
 
 import com.geosiege.common.util.ResourceLoader;
 import com.geosiege.game.R;
@@ -28,9 +29,29 @@ public class GameResources {
   public static Bitmap controls;
   public static Typeface font;
   
-  static { 
+  private static SoundPool soundPool;
+  private static final int SOUND_POOL_SIZE = 40;
+  private static final String SPACE_FONT_PATH = "fonts/spaceage.ttf";
+  
+  public static int SOUND_GUN_1;
+  public static int SOUND_GUN_2;
+  public static int SOUND_GUN_3;
+  public static int SOUND_GUN_4;
+  
+  public static void load() { 
     background = ResourceLoader.loadBitmap(R.drawable.bg, ResourceLoader.FAST_BITMAP_CONFIG);
     controls = ResourceLoader.loadBitmap(R.drawable.controls, ResourceLoader.FAST_BITMAP_CONFIG);
-    font = ResourceLoader.loadFont("fonts/spaceage.ttf");
+    font = ResourceLoader.loadFont(SPACE_FONT_PATH);
+    
+    soundPool = ResourceLoader.createSoundPool(SOUND_POOL_SIZE);
+    
+    SOUND_GUN_1 = ResourceLoader.loadSound(soundPool, R.raw.laser_01);
+    SOUND_GUN_2 = ResourceLoader.loadSound(soundPool, R.raw.gun_02);
+    SOUND_GUN_3 = ResourceLoader.loadSound(soundPool, R.raw.gun_03);
+    SOUND_GUN_4 = ResourceLoader.loadSound(soundPool, R.raw.gun_04);
+  }
+  
+  public static void play(int id) {
+    ResourceLoader.playSound(soundPool, id, 0, 2f);
   }
 }

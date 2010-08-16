@@ -204,6 +204,10 @@ public class Swarm extends GameObject {
     
     for (SpawnPoint spawnPoint : pattern.spawnPoints) {
       EnemyShip ship = enemyStockpile.take(spawnPoint.shipType);
+
+      if (ship == null) {
+        continue;
+      }
       
       float x = 0;
       float y = 0;
@@ -212,13 +216,14 @@ public class Swarm extends GameObject {
         x = GameState.playerShip.x + scale * spawnPoint.xPercent;
         y = GameState.playerShip.y + scale * spawnPoint.yPercent;
       } else {
-        x = map.left + map.width * spawnPoint.xPercent;
-        y = map.top + map.height * spawnPoint.yPercent;
+        x = map.spawnLeft + map.spawnWidth * spawnPoint.xPercent;
+        y = map.spawnTop + map.spawnHeight * spawnPoint.yPercent;
       }
 
-      spawnedShips.add(ship);
-      
-      ship.spawn(x, y, spawnTime);      
+      if (map.inSpawnableArea(x, y)) {
+        spawnedShips.add(ship);
+        ship.spawn(x, y, spawnTime);      
+      }
     } 
   }
 }

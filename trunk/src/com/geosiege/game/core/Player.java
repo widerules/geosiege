@@ -17,13 +17,17 @@
 package com.geosiege.game.core;
 
 public class Player {
-
+  
   public float maxHealth;
   public int experience;
   public int lives;
   public String experienceString;
   
   public Player() {
+    reset();
+  }
+  
+  public void reset() {
     maxHealth = 100;
     experience = 0;
     addExp(0);

@@ -18,6 +18,8 @@ package com.geosiege.game.core;
 
 import android.graphics.Canvas;
 
+import com.geosiege.common.PhysicalObject;
+
 /**
  * A camera that centers the view around the user. The camera uses a 
  * 'window frame' approach. If the player's ship remains within this window,
@@ -80,19 +82,12 @@ public class Camera {
    * The right of the visible camera area in world coordinates.
    */
   public float right;
-
-  /**
-   * The singleton camera instance.
-   */
-  public static Camera camera;
   
-  public Camera(float x, float y) {
-    updateScreenSize(GameState.screenWidth, GameState.screenHeight);
-    ensureOnScreen(x, y);
-    camera = this;
+  public Camera() {
+    setScreenSize(GameState.screenWidth, GameState.screenHeight);
   }
   
-  public synchronized void updateScreenSize(float screenWidth, float screenHeight) {
+  public synchronized void setScreenSize(float screenWidth, float screenHeight) {
     this.screenHalfWidth = screenWidth / 2;
     this.screenHalfHeight = screenHeight / 2;
     this.width = screenWidth;
@@ -121,10 +116,13 @@ public class Camera {
     c.restore();
   }
   
+  public synchronized void ensureOnScreen(PhysicalObject object) {
+    ensureOnScreen(object.x, object.y);
+  }
+  
   public synchronized void ensureOnScreen(float cameraX, float cameraY) {
-    Map map = GameState.map;
+    Map map = GameState.level.map;
     change = false;
-
     
     // Ensures that the given camera x and y coordinates are visible 
     // on the screen. The camera works as a window into the world. The

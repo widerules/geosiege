@@ -30,8 +30,7 @@ public class BackgroundLayer extends GameObject {
   Rect bitmapSrc;
   Rect bitmapDest;
   Paint paint;
-  
-  
+
   public BackgroundLayer() {
     
     bitmap = GameResources.background;
