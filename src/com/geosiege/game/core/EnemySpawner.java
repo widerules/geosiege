@@ -25,6 +25,9 @@ import com.geosiege.common.util.ObjectPoolManager;
 import com.geosiege.common.util.RandomUtil;
 import com.geosiege.game.ships.EnemyShip;
 
+/**
+ * TODO: DELETE THIS CLASS.
+ */
 public class EnemySpawner<T extends EnemyShip> extends GameObject {
 
   int maxShips;
@@ -94,7 +97,7 @@ public class EnemySpawner<T extends EnemyShip> extends GameObject {
 
     float spawnX = x + RandomUtil.nextFloat(-xJitter, xJitter);
     float spawnY = y + RandomUtil.nextFloat(-yJitter, yJitter);
-    ship.spawn(spawnX, spawnY);
+    ship.spawn(spawnX, spawnY, 2000);
 
     recordLastSpawnTime();
   }

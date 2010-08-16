@@ -22,12 +22,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.view.MotionEvent;
 
-import com.geosiege.common.GameMode;
+import com.geosiege.common.Game;
 import com.geosiege.game.core.ArcadeGameMode;
 import com.geosiege.game.core.RotatingBackgroundLayer;
 import com.geosiege.game.resources.GameResources;
 
-public class MainMenuGameMode extends GameMode {
+public class MainMenuGameMode extends Game {
  
   
   public static final Paint TITLE_PAINT;
@@ -77,10 +77,10 @@ public class MainMenuGameMode extends GameMode {
     init();
   }
   
-  public void switchToGame() {
-    arcadeMode.init();
-    updater.setMode(arcadeMode);
-  }
+  /*public void switchToGame() {
+    arcadeMode.startGame();
+    updater.setGame(arcadeMode);
+  }*/
   
   public void init() {
     switcher.show(mainPage);
@@ -106,8 +106,8 @@ public class MainMenuGameMode extends GameMode {
     return true;
   }
   
-  @Override
+  /*@Override
   public boolean onBackPress() {
     return switcher.getActive().onBackPress();
-  }
+  } */
 }

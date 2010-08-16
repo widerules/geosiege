@@ -37,7 +37,7 @@ public class RotatingBackgroundLayer extends BackgroundLayer {
     
     bitmapSrc = new Rect(0, 0, width, height);
     
-    zoom = new Transition(.8f, 1.1f, 40000, Transitions.EASE_IN_OUT);
+    zoom = new Transition(1f, 1.3f, 40000, Transitions.EASE_IN_OUT);
     zoom.setAutoReverse(true);
     rotate = new Transition(0f, 360f, 120000, Transitions.LINEAR);
     rotate.setAutoReset(true);

@@ -28,7 +28,7 @@ public class ScrollingBackgroundLayer extends BackgroundLayer {
   
   public void draw(Canvas c) {
    
-    Camera camera = Camera.camera;
+    Camera camera = GameState.camera;
     
     float maxBitmapX = Math.min(bitmap.getWidth() - camera.width, map.width * .1f);
     float maxBitmapY = Math.min(bitmap.getHeight() - camera.height, map.height * .1f);

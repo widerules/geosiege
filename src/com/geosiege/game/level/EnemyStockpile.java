@@ -25,6 +25,12 @@ public class EnemyStockpile extends GameObject {
     return pool;
   }
   
+  public void reset() {
+    for (ObjectPoolManager<? extends EnemyShip> pool : supply.values()) {
+      pool.reclaimPool();
+    }
+  }
+  
   public void update(long time) {
     for (ObjectPoolManager<? extends EnemyShip> pool : supply.values()) {
       pool.update(time);

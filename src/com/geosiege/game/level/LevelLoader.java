@@ -28,28 +28,38 @@ public class LevelLoader {
   
   private final EnemyStockpile enemyStockpile;
   private Level level;
+  private long firstSpawnDelay;
   
   public LevelLoader(EnemyStockpile enemyStockpile) {
+    this(enemyStockpile, 0);
+  }
+  
+  public LevelLoader(EnemyStockpile enemyStockpile, long firstSpawnDelay) {
     this.enemyStockpile = enemyStockpile;
+    this.firstSpawnDelay = firstSpawnDelay;
   }
   
   public Level loadLevel(String fileName) throws IOException {
-    level = new Level();
+    level = new Level(firstSpawnDelay);
     
     InputStream inputStream;
     inputStream = ResourceLoader.loadAsset(fileName);
     
-    
-    InputStreamReader inputReader = new InputStreamReader(inputStream);
-    BufferedReader reader = new BufferedReader(inputReader);
-    
-    loadLevelName(reader);
-    loadSwarms(reader);
+    try {
+      InputStreamReader inputReader = new InputStreamReader(inputStream);
+      BufferedReader reader = new BufferedReader(inputReader);
+      
+      loadLevelName(reader);
+      loadSwarms(reader);
+    } catch (IOException e) {
+      inputStream.close();
+      throw e;
+    }
     
     if (level.swarms.size() == 0) {
       throw new IOException("No swarms were loaded in the level " + fileName);
     }
-    
+  
     return level;
   }
   

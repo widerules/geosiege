@@ -3,6 +3,8 @@ package com.geosiege.game.level;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Canvas;
+
 import com.geosiege.common.GameObject;
 import com.geosiege.game.core.Map;
 
@@ -35,10 +37,16 @@ public class Level extends GameObject {
   
   private int nextSwarmIndex = 0;
   private Swarm nextSwarm;
+  private long firstSpawnDelay = 0;
   
   public Level() {
-    map = new Map();
-    complete = false;
+    this(0);
+  }
+  
+  public Level(long firstSpawnDelay) {
+    this.map = new Map();
+    this.firstSpawnDelay = firstSpawnDelay;
+    this.complete = false;
   }
   
   protected void setMapSize(float width, float height) {
@@ -52,11 +60,20 @@ public class Level extends GameObject {
       swarm.priorSwarm = swarms.get(swarms.size()-2);
     } else if (swarms.size() == 1) {
       nextSwarm = swarm;
+      nextSwarm.triggerDelay += firstSpawnDelay;
     }
   }
   
   @Override
+  public void draw(Canvas c) {
+    map.draw(c);
+  }
+  
+  @Override
   public void update(long time) {
+    
+    map.update(time);
+    
     // If the levels over with do nothing.
     if (complete) {
       return;

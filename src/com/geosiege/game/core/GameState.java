@@ -22,10 +22,12 @@ import android.os.Vibrator;
 
 import com.geosiege.common.effects.Effects;
 import com.geosiege.common.util.ResourceLoader;
+import com.geosiege.game.Preferences;
 import com.geosiege.game.level.EnemyStockpile;
 import com.geosiege.game.level.Level;
 import com.geosiege.game.resources.GameResources;
 import com.geosiege.game.ships.PlayerShip;
+import com.geosiege.game.stats.GeoStatsRecorder;
 
 public class GameState {
   public static int screenWidth = 800;
@@ -34,19 +36,31 @@ public class GameState {
   public static Player player = null;
   public static PlayerShip playerShip = null;
   public static EnemyStockpile enemyStockpile = null;
-  public static Map map = null;
   public static Camera camera = null;
   public static Effects effects = null;
   public static Context context = null;
   public static Activity activity;
   public static Level level = null;
+  public static GeoStatsRecorder stats = null;
+  public static Preferences preferences = null;
+  
+  private static boolean resourcesLoaded = false;
   
   public static void setup(Activity activity) {
+    
     GameState.activity = activity;
-    GameState.context = activity.getApplicationContext();
+    GameState.context = activity;
+    GameState.stats =  new GeoStatsRecorder();
+    GameState.preferences = new Preferences();
+    
+    if (resourcesLoaded)
+      return;
+
     ResourceLoader.init(context);
     GameResources.load();
     GameState.vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+
+    resourcesLoaded = true;
   }
   
   public static void setScreen(int width, int height) {

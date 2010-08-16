@@ -55,7 +55,7 @@ public class LoadingMenuPage extends MenuPage {
   public void update(long time) {
     delayCount += time;
     if (delayCount > LOADING_DELAY) {
-      gameMode.switchToGame();
+      //gameMode.switchToGame();
     }
   }
 }
