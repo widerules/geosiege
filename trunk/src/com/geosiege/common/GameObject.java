@@ -16,10 +16,6 @@
 
 package com.geosiege.common;
 
-import java.util.ArrayList;
-
-
-
 import android.graphics.Canvas;
 
 
@@ -34,37 +30,17 @@ public class GameObject {
   /** Whether an object was obtained from an object pool. */
   public boolean taken = false;
   
-  ArrayList<Component> components;
    
   public GameObject() {
-    components = new ArrayList<Component>();
+
   }
   
   public void draw(Canvas canvas) {
-    int size = components.size();
-    Component component;
-    for ( int i = 0 ; i < size ; i++) {
-      component = components.get(i);
-      synchronized (component) {
-        component.draw(canvas);
-      }
-    }
+   
   }
   
   public void update(long time) {
-    int size = components.size();
-    Component component;
-    for ( int i = 0 ; i < size ; i++) {
-      component = components.get(i);
-      synchronized (component) {
-        component.update(time);
-      }
-    }
-  }
-  
-  public void addComponent(Component component) {
-    component.parent = this;
-    components.add(component);
+    
   }
   
   public void enable() {

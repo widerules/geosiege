@@ -16,6 +16,8 @@
 
 package com.geosiege.common;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,14 +31,18 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
-public class Updater {
+import com.geosiege.common.GameSurface.GameSurfaceEventListener;
 
-  public GameMode mode = null;
+public class Updater implements GameSurfaceEventListener  {
+
+  public Game game = null;
   
-  private static final boolean REPORT_FPS = true;
   private static final int UPDATES_PER_SECOND = 60;
-  private final SurfaceHolder surfaceHolder; 
   private final Timer timer;
+  private final GameSurface gameSurface;
+  private final SurfaceHolder surfaceHolder; 
+  private boolean running = false;
+  private boolean showFps = false;
   
   private UpdateTask updateTask;
   private long timestamp;
@@ -46,42 +52,74 @@ public class Updater {
   private int fps = 0;
   private long fpsTimestamp;
   
+  private Map<Integer, Handler> eventHandlers;
+  
   public Handler handler;
   
-  public Updater(SurfaceHolder surfaceHolder) {
+  public Updater(GameSurface surface) {
     this.timer = new Timer();
     this.timestamp = System.currentTimeMillis();
-    this.surfaceHolder = surfaceHolder;
+    
+    this.eventHandlers = new HashMap<Integer, Handler>();
     
     this.paint = new Paint();
-    this.paint.setColor(Color.WHITE);
+    this.paint.setColor(Color.WHITE); 
+    
+    // Get a handle to the holder so we can draw to the surface.
+    this.gameSurface = surface;
+    this.surfaceHolder = surface.getHolder();
+
+    // Register to receive various events on the underlying surface. These
+    // can then be piped to the game.
+    gameSurface.setEventListener(this);
   }
   
   public void start() {
-    
+    running = true;
     long updateInterval = 1000 / UPDATES_PER_SECOND;
     updateTask = new UpdateTask();
     timer.scheduleAtFixedRate(updateTask, 0, updateInterval);
   }
   
   public void stop() {
+    running = false;
     updateTask.cancel();
   }
   
   public void pause() {
+    running = false;
     updateTask.cancel();
   }
   
   private void update() {
     long now = System.currentTimeMillis();
     long delta = now - timestamp;
-    if (mode != null) {
-      mode.update(delta);
+    if (game != null) {
+      
+      if (!game.initialized) {
+        game.init();
+      }
+      
+      game.update(delta);
     }
     timestamp = now;
   }
   
   private void draw() {
+    if (surfaceHolder == null) {
+      Log.e(Updater.class.getName(), "Can not draw yet. Surface has not be set.");
+      return;
+    }
+    
+    if (!gameSurface.isSurfaceReady()) {
+      Log.e(Updater.class.getName(), "Can not draw yet. Surface has not been created.");
+      return;
+    }
+    
+    if (game == null || !game.initialized) {
+      return;
+    }
+    
     Canvas c = null;
     try {
       c = surfaceHolder.lockCanvas(null);
@@ -89,7 +127,7 @@ public class Updater {
         draw(c);
       }
     } catch (Exception e) {
-      Log.i(Updater.class.getName(), "Error rendering: " + e.toString());
+      Log.i(Updater.class.getName(), "Rendering Exception", e);
     } finally {
       // do this in a finally so that if an exception is thrown
       // during the above, we don't leave the Surface in an
@@ -100,7 +138,6 @@ public class Updater {
     }
   }
   
-
   /**
    * Draws the ship, fuel/speed bars, and background to the provided
    * Canvas.
@@ -108,11 +145,9 @@ public class Updater {
   private void draw(Canvas canvas) {
     canvas.drawColor(Color.BLACK, Mode.SRC_IN);
     
-    if (mode != null) {
-      mode.draw(canvas);
-    }
+    game.draw(canvas);
     
-    if (REPORT_FPS) {
+    if (showFps) {
       frameCount++;
       long now = System.currentTimeMillis();
       if ( now - fpsTimestamp > 1000) {
@@ -129,29 +164,45 @@ public class Updater {
     canvas.restore();
   }
   
-  public void setMode(GameMode mode) {
-    this.mode = mode;
+  public void addEventHandler(int eventId, Handler handler) {
+    eventHandlers.put(eventId, handler);
+  }
+  
+  public void removeEventHandler(int eventId) {
+    eventHandlers.remove(eventId);
+  }
+  
+  public void clearEventHandlers() {
+    eventHandlers.clear();
+  }
+  
+  public void triggerEventHandler(int eventId) {
+    if (!running) {
+      Log.d(Updater.class.getName(), "Not triggering event. The game is not running");
+      return;
+    }
+    
+    if (!eventHandlers.containsKey(eventId)) {
+      Log.e(Updater.class.getName(), "Event Handler for " + eventId + " not found.");
+    }
+    Handler handler = eventHandlers.get(eventId);
+    handler.sendEmptyMessage(0);
+  }
+  
+  public void setGame(Game mode) {
+    this.game = mode;
     if (mode != null) {
-      this.mode.updater = this;
+      this.game.updater = this;
+      
+      // If the surface is already good to go, notify the game.
+      if (gameSurface.isSurfaceReady()) {
+        onSurfaceCreated();
+      }
     }
   }
   
-  /// USER INPUT
-  
-  public boolean onTouchEvent(MotionEvent e) {
-    return mode != null ? mode.onTouchEvent(e) : false;
-  }
-
-  public boolean onTrackballEvent(MotionEvent e) {
-    return mode != null ? mode.onTrackballEvent(e) : false;
-  }
-  
-  public boolean onKeyDown(int key, KeyEvent e) {
-    return mode != null ? mode.onKeyDown(key, e) : false;
-  }
-  
-  public boolean onKeyUp(int key, KeyEvent e) {    
-    return mode != null ? mode.onKeyUp(key, e) : false;
+  public void showFps(boolean state) {
+    this.showFps = state;
   }
   
   private class UpdateTask extends TimerTask {
@@ -164,5 +215,46 @@ public class Updater {
         Log.i("zeddic", "Update Exception", e);
       }
     }    
+  }
+  
+  /// IMPLEMENTS GameSurfaceEventListener
+  // Pipe events from the rendering surface to the active game.
+  
+  public boolean onTouchEvent(MotionEvent e) {
+    return game != null ? game.onTouchEvent(e) : false;
+  }
+  
+  public boolean onKeyDown(int key, KeyEvent e) {
+    return game != null ? game.onKeyDown(key, e) : false;
+  }
+  
+  public boolean onKeyUp(int key, KeyEvent e) {    
+    return game != null ? game.onKeyUp(key, e) : false;
+  }
+  
+  public boolean onTrackballEvent(MotionEvent e) {
+    return game != null ? game.onTrackballEvent(e) : false;
+  }
+  
+  public void onFocusChangedEvent(boolean hasFocus) {
+    if (game != null) {
+      game.onFocusChangedEvent(hasFocus);
+    }
+  }
+  
+  public void onLayoutChangedEvent(boolean changed, int left, int top, int right, int bottom) {
+    if (game != null) {
+      game.onLayoutChangedEvent(changed, left, top, right, bottom);
+    }
+  }
+
+  public void onSurfaceCreated() {
+    if (game != null) {
+      game.onSurfaceReady();
+    }
+  }
+
+  public void onSurfaceDestroyed() {
+    stop();
   }
 }
