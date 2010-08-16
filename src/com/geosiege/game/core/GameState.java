@@ -22,7 +22,6 @@ import android.os.Vibrator;
 
 import com.geosiege.common.effects.Effects;
 import com.geosiege.common.util.ResourceLoader;
-import com.geosiege.game.Preferences;
 import com.geosiege.game.level.EnemyStockpile;
 import com.geosiege.game.level.Level;
 import com.geosiege.game.resources.GameResources;

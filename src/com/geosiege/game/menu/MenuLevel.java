@@ -1,8 +1,8 @@
-package com.geosiege.game;
+package com.geosiege.game.menu;
 
 import android.os.Bundle;
 
-import com.geosiege.game.Levels.Difficulty;
+import com.geosiege.game.menu.Levels.Difficulty;
 
 public class MenuLevel {
  

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.geosiege.game;
+package com.geosiege.game.components;
 
 import com.geosiege.common.Component;
 import com.geosiege.common.PhysicalObject;

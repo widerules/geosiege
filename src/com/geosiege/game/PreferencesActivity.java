@@ -1,5 +1,7 @@
 package com.geosiege.game;
 
+import com.geosiege.game.core.Preferences;
+
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 

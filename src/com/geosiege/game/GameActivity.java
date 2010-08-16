@@ -39,6 +39,7 @@ import com.geosiege.common.GameSurface;
 import com.geosiege.common.Updater;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.core.GeoSiegeGame;
+import com.geosiege.game.menu.MenuLevel;
 
 public class GameActivity extends Activity {
   

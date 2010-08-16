@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.geosiege.game.core.GameState;
+import com.geosiege.game.menu.MenuStat;
 
 public class StatsActivity extends Activity {
   

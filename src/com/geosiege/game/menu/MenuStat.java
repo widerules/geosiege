@@ -1,4 +1,4 @@
-package com.geosiege.game;
+package com.geosiege.game.menu;
 
 public class MenuStat {
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.geosiege.game;
+package com.geosiege.game.components;
 
 import android.util.FloatMath;
 
