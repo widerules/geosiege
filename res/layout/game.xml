@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+    
+    <LinearLayout android:id="@+id/game"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+      android:orientation="vertical"/>
+    
+    <LinearLayout android:id="@+id/gameMessageContainer"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_gravity="center_vertical"
+      android:orientation="vertical"
+      android:background="#1F1F1F"
+      android:gravity="center_horizontal">
+      <View android:layout_width="fill_parent" android:layout_height="2dip" android:background="#545454" />         
+      <TextView android:id="@+id/gameMessageText"
+          android:layout_height="fill_parent"
+          android:layout_gravity="center_vertical|center_horizontal"
+          android:text="Loading"
+          android:layout_width="fill_parent"
+          android:textColor="#ffffff"
+          android:textSize="25sp"
+          android:gravity="center"
+          android:paddingTop="2dip"
+          android:paddingBottom="2dip"
+          />
+      <View android:layout_width="fill_parent" android:layout_height="2dip" android:background="#545454" />
+    </LinearLayout>
+    
+
+    <TextView android:id="@+id/gameCountdownText"
+        android:visibility="invisible"
+        android:layout_height="100dip"
+        android:layout_width="200dip"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="3"
+
+        android:textColor="#ffffff"
+        android:textSize="40sp"
+        android:gravity="center"
+        />
+</RelativeLayout>
