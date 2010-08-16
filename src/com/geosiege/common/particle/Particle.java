@@ -20,7 +20,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.geosiege.common.GameObject;
 import com.geosiege.common.PhysicalObject;
 import com.geosiege.common.util.Vector2d;
 
