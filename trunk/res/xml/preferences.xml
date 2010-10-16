@@ -35,10 +35,25 @@
 		    />
 		    
 		 <CheckBoxPreference
+        android:key="playMusic"
+        android:title="@string/preference_play_music"
+        android:defaultValue="true"
+        android:persistent="true"
+        />
+		    
+		 <CheckBoxPreference
         android:key="showFps"
         android:title="@string/preference_show_fps"
         android:defaultValue="false"
         android:persistent="true"
+        />
+        
+     <CheckBoxPreference
+        android:key="debugMode"
+        android:title="@string/preference_debug_mode"
+        android:defaultValue="false"
+        android:persistent="true"
+        android:summary="@string/preference_debug_mode_summary"
         />
                 
       <!-- <com.replica.replicaisland.KeyboardConfigDialogPreference
@@ -54,6 +69,19 @@
           replica:jumpKey="keyJump"
           replica:attackKey="keyAttack"
           /> -->
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/preference_about">
+    <Preference
+        android:title="@string/preference_about_title"
+        android:summary="@string/preference_about_summary"
+        android:enabled="false"
+        android:selectable="false" />
+        
+    <Preference
+     android:title="@string/preference_tracking_title"
+     android:summary="@string/preference_tracking_summary"
+     android:enabled="false"
+     android:selectable="false" />
   </PreferenceCategory>
 </PreferenceScreen>
            <!-- <CheckBoxPreference
