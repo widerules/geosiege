@@ -21,8 +21,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import com.geosiege.common.GameObject;
 import com.geosiege.game.resources.GameResources;
+import com.zeddic.game.common.GameObject;
 
 public class BackgroundLayer extends GameObject {
 

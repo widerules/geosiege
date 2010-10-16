@@ -20,19 +20,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.geosiege.common.collision.CollisionComponent;
-import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.util.Bounds;
-import com.geosiege.common.util.Circle;
-import com.geosiege.common.util.ComponentManager;
-import com.geosiege.common.util.Polygon;
-import com.geosiege.common.util.Polygon.PolygonBuilder;
 import com.geosiege.game.components.MapBoundsComponent;
 import com.geosiege.game.components.SimplePathComponent;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Gun;
 import com.geosiege.game.guns.control.AimingGunControl;
+import com.zeddic.game.common.collision.CollisionComponent;
+import com.zeddic.game.common.collision.CollisionManager;
+import com.zeddic.game.common.util.Bounds;
+import com.zeddic.game.common.util.Circle;
+import com.zeddic.game.common.util.ComponentManager;
+import com.zeddic.game.common.util.Polygon;
+import com.zeddic.game.common.util.Polygon.PolygonBuilder;
 
 public class SimpleEnemyShip extends EnemyShip {
 
@@ -68,14 +68,14 @@ public class SimpleEnemyShip extends EnemyShip {
     bounds = new Bounds(new Circle(15));
     
     gun = Arsenal.getPeaShooter(this);
-    gun.setGunControl(new AimingGunControl(this, GameState.playerShip, 200, 25));
+    gun.setGunControl(new AimingGunControl(this, GameState.player.ship, 200, 25));
     gun.setAutoFire(true);
     gun.setBulletSpeed(70);
     gun.setFireCooldown(800);
     
     components = new ComponentManager(this);
     components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
-    components.add(new SimplePathComponent(this, GameState.playerShip, 100));
+    components.add(new SimplePathComponent(this, GameState.player.ship, 120, 30, 100));
     components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
     components.add(gun);
   }

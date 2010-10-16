@@ -16,7 +16,7 @@
 
 package com.geosiege.game.ships;
 
-import com.geosiege.common.PhysicalObject;
+import com.zeddic.game.common.PhysicalObject;
 
 public class Ship extends PhysicalObject {
 
@@ -27,4 +27,7 @@ public class Ship extends PhysicalObject {
     health = 10;
   }
   
+  public void damage(float damage) {
+    health -= damage;
+  }
 }

@@ -20,22 +20,21 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.geosiege.common.collision.CollisionComponent;
-import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.util.Bounds;
-import com.geosiege.common.util.Circle;
-import com.geosiege.common.util.ComponentManager;
-import com.geosiege.common.util.Polygon;
-import com.geosiege.common.util.Polygon.PolygonBuilder;
 import com.geosiege.game.components.MapBoundsComponent;
 import com.geosiege.game.components.SimplePathComponent;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Gun;
+import com.zeddic.game.common.collision.CollisionComponent;
+import com.zeddic.game.common.collision.CollisionManager;
+import com.zeddic.game.common.util.Bounds;
+import com.zeddic.game.common.util.Circle;
+import com.zeddic.game.common.util.ComponentManager;
+import com.zeddic.game.common.util.Polygon;
+import com.zeddic.game.common.util.Polygon.PolygonBuilder;
 
 public class DeathStar extends EnemyShip {
 
-  
   ////SETUP OBJECT SHAPE AND PAINT
   private static final Paint PAINT;
   private static final Polygon SHAPE;
@@ -47,16 +46,16 @@ public class DeathStar extends EnemyShip {
     PAINT.setStrokeWidth(2);
     
     SHAPE = new PolygonBuilder()
-        .add(-3, -3)
-        .add(0, -9)
-        .add(3, -3)
-        .add(8, -2)
-        .add(4, 2)
-        .add(5, 8)
-        .add(0, 5)
-        .add(-5, 8)
-        .add(-4, 2)
-        .add(-8, -2)
+        .add(-6, -6)
+        .add(0, -18)
+        .add(6, -6)
+        .add(16, -4)
+        .add(8, 4)
+        .add(10, 16)
+        .add(0, 10)
+        .add(-10, 16)
+        .add(-8, 4)
+        .add(-16, -4)
         .build();
   }
   
@@ -72,7 +71,6 @@ public class DeathStar extends EnemyShip {
     super(x, y);
     
     this.paint = PAINT;
-    this.setScale(2);
     this.rotation = 20f;
     this.bounds = new Bounds(new Circle(10));
     
@@ -81,7 +79,7 @@ public class DeathStar extends EnemyShip {
     
     components = new ComponentManager(this);
     components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
-    components.add(new SimplePathComponent(this, GameState.playerShip, 100));
+    components.add(new SimplePathComponent(this, GameState.player.ship, 120, 30, 100));
     components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
     components.add(gun); 
   }

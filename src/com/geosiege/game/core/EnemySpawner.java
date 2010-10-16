@@ -18,12 +18,12 @@ package com.geosiege.game.core;
 
 import android.graphics.Canvas;
 
-import com.geosiege.common.GameObject;
-import com.geosiege.common.animation.Transition;
-import com.geosiege.common.animation.Transitions;
-import com.geosiege.common.util.ObjectPoolManager;
-import com.geosiege.common.util.RandomUtil;
 import com.geosiege.game.ships.EnemyShip;
+import com.zeddic.game.common.GameObject;
+import com.zeddic.game.common.transistions.Transition;
+import com.zeddic.game.common.transistions.Transitions;
+import com.zeddic.game.common.util.ObjectPoolManager;
+import com.zeddic.game.common.util.RandomUtil;
 
 /**
  * TODO: DELETE THIS CLASS.

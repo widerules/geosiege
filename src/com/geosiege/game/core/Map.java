@@ -23,7 +23,7 @@ import android.graphics.Path;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 
-import com.geosiege.common.GameObject;
+import com.zeddic.game.common.GameObject;
 
 public class Map extends GameObject {
   
@@ -46,6 +46,8 @@ public class Map extends GameObject {
   public float spawnTop;
   public float spawnWidth;
   public float spawnHeight;
+  public float spawnRight;
+  public float spawnBottom;
 
   Path borderPath; 
   Paint paint;
@@ -76,6 +78,8 @@ public class Map extends GameObject {
     spawnTop = top + SPAWN_BUFFER;
     spawnWidth = width - 2 * SPAWN_BUFFER;
     spawnHeight = height - 2 * SPAWN_BUFFER;
+    spawnBottom = spawnTop + spawnHeight;
+    spawnRight = spawnLeft + spawnWidth;
     
     borderPath = new Path();
     borderPath.moveTo(left, top);

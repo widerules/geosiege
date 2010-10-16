@@ -47,7 +47,7 @@ public class MainMenuActivity extends Activity {
     GameState.setup(this);
     
     TextView title = (TextView)findViewById(R.id.mainMenuTitle);
-    title.setTypeface(GameResources.font);
+    title.setTypeface(GameResources.spaceFont);
     
     //GameResources.init(getApplicationContext());
     
@@ -112,5 +112,11 @@ public class MainMenuActivity extends Activity {
   private void onOptionsButtonClick() {
     Intent intent = new Intent(this, PreferencesActivity.class);
     startActivity(intent);
+  }
+  
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    GameState.cleanup();
   }
 }

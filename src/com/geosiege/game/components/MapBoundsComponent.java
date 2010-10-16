@@ -16,11 +16,11 @@
 
 package com.geosiege.game.components;
 
-import com.geosiege.common.Component;
-import com.geosiege.common.PhysicalObject;
-import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.core.Map;
+import com.zeddic.game.common.Component;
+import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.game.common.util.Vector2d;
 
 /**
  * A component that determines have an object should behave once it

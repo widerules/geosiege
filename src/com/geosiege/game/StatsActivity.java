@@ -27,6 +27,8 @@ public class StatsActivity extends Activity {
     
     GameState.setup(this);
     
+    GameState.analytics.trackPageView("/stats");
+    
     loadList();
   }
   
@@ -35,6 +37,12 @@ public class StatsActivity extends Activity {
     super.onResume();
     GameState.stats.load();
     loadList();
+  }
+  
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    GameState.cleanup();
   }
   
   private void loadList() {

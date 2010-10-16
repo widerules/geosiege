@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import com.geosiege.common.util.ResourceLoader;
+import com.geosiege.game.highscore.HighScores;
+import com.zeddic.game.common.util.ObjectStockpile;
+import com.zeddic.game.common.util.ResourceLoader;
 
 public class LevelLoader {
   
   private static final String PROPERTY_SEPERATOR = ":";
   private static final String PROPERTY_LEVEL_NAME = "LevelName";
+  private static final String PROPERTY_LEVEL_ID = "LevelId";
   private static final String PROPERTY_PATTERN_SCALE = "Scale";
   private static final String PROPERTY_TRIGGER = "Trigger";
   private static final String PROPERTY_SPAWN_DELAY = "SpawnDelay";
@@ -25,21 +28,26 @@ public class LevelLoader {
   private static final String TRIGGER_TYPE_PRIOR_DEAD = "LastDead";
   private static final String TRIGGER_TYPE_PRIOR_DEAD_RATIO = "LastDeadRatio";
   
-  
-  private final EnemyStockpile enemyStockpile;
+  private final HighScores scores;
+  private final ObjectStockpile enemyStockpile;
   private Level level;
   private long firstSpawnDelay;
   
-  public LevelLoader(EnemyStockpile enemyStockpile) {
-    this(enemyStockpile, 0);
+  public LevelLoader(HighScores scores, ObjectStockpile enemyStockpile) {
+    this(scores, enemyStockpile, 0);
   }
   
-  public LevelLoader(EnemyStockpile enemyStockpile, long firstSpawnDelay) {
+  public LevelLoader(HighScores scores, ObjectStockpile enemyStockpile, long firstSpawnDelay) {
+    this.scores = scores;
     this.enemyStockpile = enemyStockpile;
     this.firstSpawnDelay = firstSpawnDelay;
   }
   
   public Level loadLevel(String fileName) throws IOException {
+    return loadLevel(fileName, false);
+  }
+  
+  public Level loadLevel(String fileName, boolean metadataOnly) throws IOException {
     level = new Level(firstSpawnDelay);
     
     InputStream inputStream;
@@ -49,26 +57,48 @@ public class LevelLoader {
       InputStreamReader inputReader = new InputStreamReader(inputStream);
       BufferedReader reader = new BufferedReader(inputReader);
       
-      loadLevelName(reader);
-      loadSwarms(reader);
+      loadMetadata(reader);
+      if (!metadataOnly) {
+        loadSwarms(reader);
+      }
     } catch (IOException e) {
       inputStream.close();
       throw e;
     }
     
-    if (level.swarms.size() == 0) {
+    if (level.swarms.size() == 0 && !metadataOnly) {
       throw new IOException("No swarms were loaded in the level " + fileName);
     }
   
     return level;
   }
   
+  public void loadMetadata(BufferedReader reader) throws IOException {
+    
+    level.name = getValue(reader, PROPERTY_LEVEL_NAME);
+    level.id = parseInt(getValue(reader, PROPERTY_LEVEL_ID));
+    level.loadScores(scores);
+    
+    reader.readLine();
+  }
+  
+  private String getValue(BufferedReader reader, String propName) throws IOException {
+    SimpleProperty prop = loadProperty(reader.readLine());
+
+    if (!prop.name.equalsIgnoreCase(propName)) {
+      throw new IOException("Could not load property :" + propName);
+    }
+    
+    return prop.value;
+
+  }
+  
   /**
    * Loads the name of the level.
    */
-  private void loadLevelName(BufferedReader reader) throws IOException {
+  /*private void loadLevelName(BufferedReader reader) throws IOException {
     SimpleProperty prop = loadProperty(reader.readLine());
-    
+
     if (!prop.name.equalsIgnoreCase(PROPERTY_LEVEL_NAME)) {
       throw new IOException("Could not find level name!");
     }
@@ -76,7 +106,7 @@ public class LevelLoader {
     level.name = prop.value;
     
     reader.readLine();
-  }
+  }*/
   
   /**
    * Loads all the swarms in the file and adds them to the level instance.

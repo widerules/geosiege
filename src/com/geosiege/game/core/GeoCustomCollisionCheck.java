@@ -16,10 +16,10 @@
 
 package com.geosiege.game.core;
 
-import com.geosiege.common.PhysicalObject;
-import com.geosiege.common.collision.CustomCollisionCheck;
 import com.geosiege.game.guns.Bullet;
 import com.geosiege.game.ships.EnemyShip;
+import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.game.common.collision.CustomCollisionCheck;
 
 public class GeoCustomCollisionCheck extends CustomCollisionCheck {
 

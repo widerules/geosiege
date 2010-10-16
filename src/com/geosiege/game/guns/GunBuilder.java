@@ -16,46 +16,41 @@
 
 package com.geosiege.game.guns;
 
-import java.util.ArrayList;
-
 import com.geosiege.game.guns.control.GunControl;
-import com.geosiege.game.ships.Ship;
+import com.zeddic.game.common.PhysicalObject;
 
 public class GunBuilder { 
   
-  public static int TYPE_GROUP = 0;
-  public static int TYPE_BULLETS = 1;
-  
   private static final float DEFAULT_OFFSET = 40f;
   private static final float DEFAULT_BULLET_SPEED = 120f;
-  private static final int DEFAULT_MAX_BULLETS = 50;
-  private static final int DEFAULT_TYPE = TYPE_BULLETS;
+  private static final float DEFAULT_BULLET_DAMAGE = 1;
   private static final int DEFAULT_COOLDOWN = 100;
+  private static final int DEFAULT_CLIP_SIZE = 6;
+  private static final int DEFAULT_RELOAD_TIME = 0;
+  private static final Class<? extends Bullet> DEFAULT_BULLET = Bullet.class;
   
-  private int type = DEFAULT_TYPE;
-  private Ship owner;
+  private PhysicalObject owner;
   private float xOffset = 0;
   private float yOffset = 0;
   private int multiplier = 1;
-  private int maxBullets = DEFAULT_MAX_BULLETS;
+  private float multiplierStartAngle = 0;
+  private float multiplierAngleBetweenBullets = 0;
   private float fireOffset = DEFAULT_OFFSET;
   private float bulletSpeed = DEFAULT_BULLET_SPEED;
+  private float bulletDamage = DEFAULT_BULLET_DAMAGE;
   private int cooldown = DEFAULT_COOLDOWN;
-  private ArrayList<Gun> guns;
   private GunControl control;
   private boolean autoFire = false;
+  private int clipSize = DEFAULT_CLIP_SIZE;
+  private int reloadTime = DEFAULT_RELOAD_TIME;
+  private Class<? extends Bullet> bulletClass = DEFAULT_BULLET;
   
   public GunBuilder() {
-    guns = new ArrayList<Gun>();
+    
   }
   
-  public GunBuilder withOwner(Ship owner) {
+  public GunBuilder withOwner(PhysicalObject owner) {
     this.owner = owner;
-    return this;
-  }
-  
-  public GunBuilder withType(int type) {
-    this.type = type;
     return this;
   }
   
@@ -65,27 +60,23 @@ public class GunBuilder {
     return this;
   }
   
-  public GunBuilder withSubGun(Gun gun) {
-    if (this.type != TYPE_GROUP) {
-      throw new IllegalArgumentException("You can only specify a subgun " +
-          "when the gun is of type 'group'");
-    }
-    guns.add(gun);
-    return this;
-  }
-  
   public GunBuilder withControl(GunControl control) {
     this.control = control;
     return this;
   }
   
-  public GunBuilder withMaxBullets(int maxBullets) {
-    this.maxBullets = maxBullets;
+  public GunBuilder withCooldown(int cooldown) {
+    this.cooldown = cooldown;
     return this;
   }
   
-  public GunBuilder withCooldown(int cooldown) {
-    this.cooldown = cooldown;
+  public GunBuilder withClipSize(int clipSize) {
+    this.clipSize = clipSize;
+    return this;
+  }
+  
+  public GunBuilder withReloadTime(int reloadTime) {
+    this.reloadTime = reloadTime;
     return this;
   }
   
@@ -99,8 +90,23 @@ public class GunBuilder {
     return this;
   }
   
+  public GunBuilder withBulletDamage(float bulletDamage) {
+    this.bulletDamage = bulletDamage;
+    return this;
+  }
+  
   public GunBuilder withMultipler(int multiplier) {
+    multiplier = Math.max(1, multiplier);
     this.multiplier = multiplier;
+    this.multiplierStartAngle = 0;
+    this.multiplierAngleBetweenBullets = 360 / multiplier;
+    return this;
+  }
+  
+  public GunBuilder withMultiplier(int multiplier, float startAngle, float angleBetweenBullets) {
+    this.multiplier = multiplier;
+    this.multiplierStartAngle = startAngle;
+    this.multiplierAngleBetweenBullets = angleBetweenBullets;
     return this;
   }
   
@@ -109,29 +115,31 @@ public class GunBuilder {
     return this;
   }
   
+  public GunBuilder withBullet(Class<? extends Bullet> bulletClass) {
+    this.bulletClass = bulletClass;
+    return this;
+  }
+  
   public Gun build() {
 
-    Gun gun;
-    if (type == TYPE_GROUP) {
-      gun = new GunGroup(guns);
-    } else {
-      gun = new BulletGun();
-    }
+    Gun gun = new Gun();
     
     gun.owner = owner;
     gun.xOffset = xOffset;
     gun.yOffset = yOffset;
-    gun.maxBullets = maxBullets;
     gun.fireCooldown = cooldown;
     gun.fireOffset = fireOffset;
     gun.bulletSpeed = bulletSpeed;
+    gun.bulletDamage = bulletDamage;
+    gun.reloadTime = reloadTime;
+    gun.clipSize = clipSize;
     gun.control = control;
     gun.autoFire = autoFire;
+    gun.bulletClass = bulletClass;
+    gun.multiplier = multiplier;
+    gun.multiplierStartAngle = multiplierStartAngle;
+    gun.multiplierAngleBetweenBullets = multiplierAngleBetweenBullets;
     gun.init();
-    
-    if (multiplier != 1) {
-      // TODO: Create Double, Triple, and Quad guns here.
-    }
     
     return gun;
   }

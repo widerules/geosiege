@@ -12,36 +12,41 @@ public class Levels {
   public static final MenuLevelGroup BETA_LEVELS = new MenuLevelGroup(
       "Beta Levels",
       Arrays.asList(
-          new MenuLevel("1.txt", "Simple", Difficulty.EASY, false),
-          new MenuLevel("test.txt", "Survive This!", Difficulty.HARD, false)
+          new MenuLevel("1.txt", Difficulty.EASY, false),
+          new MenuLevel("test.txt", Difficulty.HARD, false)
+      ));
+  
+  public static final MenuLevelGroup ENEMY_CHALLENGES = new MenuLevelGroup(
+      "Enemy Challenges",
+      Arrays.asList(
+          new MenuLevel("arrow_test.txt", Difficulty.EASY, false),
+          new MenuLevel("blinker_test.txt", Difficulty.MODERATE, false),
+          new MenuLevel("bomb_test.txt", Difficulty.HARD, false)
       ));
   
   public static final MenuLevelGroup EASY_LEVELS = new MenuLevelGroup(
       "Easy",
       Arrays.asList(
-          new MenuLevel("test.txt", "Slow Beginnings", Difficulty.SIMPLE, false),
-          new MenuLevel("1.txt", "Shot to kill", Difficulty.SIMPLE, false),
-          new MenuLevel("1.txt", "Easy Pickings", Difficulty.EASY, false)
+          new MenuLevel("test.txt", Difficulty.SIMPLE, false),
+          new MenuLevel("1.txt", Difficulty.SIMPLE, false),
+          new MenuLevel("1.txt", Difficulty.EASY, false)
       ));
   
   public static final MenuLevelGroup MEDIUM_LEVELS = new MenuLevelGroup(
       "Medium",
       Arrays.asList(
-          new MenuLevel("1.txt", "The Spawning", Difficulty.EASY, false),
-          new MenuLevel("1.txt", "Green Diamonds!!", Difficulty.MODERATE, false),
-          new MenuLevel("1.txt", "Thats no moon", Difficulty.MODERATE, false)
+          new MenuLevel("1.txt", Difficulty.EASY, false)
       ));
   
   public static final MenuLevelGroup HARD_LEVELS = new MenuLevelGroup(
       "HARD",
       Arrays.asList(
-          new MenuLevel("1.txt", "Dodge this.", Difficulty.MODERATE, false),
-          new MenuLevel("1.txt", "Are you serious?", Difficulty.HARD, false),
-          new MenuLevel("1.txt", "What the hell man", Difficulty.INSANE, false)
+          new MenuLevel("1.txt", Difficulty.MODERATE, false)
       ));
 
   public static final List<MenuLevelGroup> ALL_LEVELS = Arrays.asList(
-      BETA_LEVELS
+      BETA_LEVELS,
+      ENEMY_CHALLENGES
       /*EASY_LEVELS,
       MEDIUM_LEVELS,
       HARD_LEVELS*/);
@@ -60,11 +65,11 @@ public class Levels {
     return DIFFICULTY_TO_ICON_MAP[difficulty.ordinal()];
   }
   
-  public static MenuLevel getLevelWithName(String name) {
+  public static MenuLevel getLevelByFileName(String file) {
     
     for (MenuLevelGroup levelGroup : Levels.ALL_LEVELS) {
       for (MenuLevel level : levelGroup.levels) {
-        if (level.name.equalsIgnoreCase(name)) {
+        if (level.file.equalsIgnoreCase(file)) {
           return level;
         }
       }

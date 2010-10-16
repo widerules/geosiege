@@ -20,17 +20,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.geosiege.common.PhysicalObject;
-import com.geosiege.common.collision.CollisionComponent;
-import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.util.Bounds;
-import com.geosiege.common.util.Circle;
-import com.geosiege.common.util.ComponentManager;
-import com.geosiege.common.util.Shape;
-import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.components.MapBoundsComponent;
-import com.geosiege.game.core.GameState;
-
+import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.game.common.collision.CollisionComponent;
+import com.zeddic.game.common.collision.CollisionManager;
+import com.zeddic.game.common.effects.Effects;
+import com.zeddic.game.common.util.Bounds;
+import com.zeddic.game.common.util.Circle;
+import com.zeddic.game.common.util.ComponentManager;
+import com.zeddic.game.common.util.Vector2d;
 
 public class Bullet extends PhysicalObject {
 
@@ -38,15 +36,12 @@ public class Bullet extends PhysicalObject {
   
   ////SETUP OBJECT SHAPE AND PAINT
   private static final Paint PAINT;
-  private static final Shape SHAPE;
   private static float ANGLE_OFFSET = 0;
   static {
     PAINT = new Paint();
     PAINT.setColor(Color.YELLOW);
     PAINT.setStyle(Paint.Style.FILL);
-    PAINT.setStrokeWidth(4);
-    
-    SHAPE = new Circle(4);
+    PAINT.setStrokeWidth(2);
   }
 
   public long life; 
@@ -54,19 +49,30 @@ public class Bullet extends PhysicalObject {
   public boolean firedByEnemy = false;
   
   private ComponentManager components;
+  private CollisionComponent collisionComponent;
   
-  MapBoundsComponent boundsCheck; 
+  public Bullet() {
+    this(0, 0);
+  }
   
   public Bullet(float x, float y) {
     super(x, y);
 
-    bounds = new Bounds(SHAPE);
+    bounds = new Bounds(new Circle(4));
     life = 0;
     maxLife = DEFAULT_MAX_LIFE;
     
+    collisionComponent = new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY);
+    
     components = new ComponentManager(this);
-    components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY));
+    components.add(collisionComponent);
     components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
+  }
+  
+  @Override
+  public void kill() {
+    super.kill();
+    collisionComponent.unregisterObject();
   }
   
   public void reset() {
@@ -78,13 +84,7 @@ public class Bullet extends PhysicalObject {
   @Override
   public void draw(Canvas canvas) {
     super.draw(canvas);
-  
-    //canvas.save();
-    //canvas.translate(x, y);
-    //canvas.rotate((ANGLE_OFFSET + angle));
     canvas.drawLine(x, y, x + -velocity.x / 6, y + -velocity.y / 6, PAINT);
-    //canvas.drawCircle(0, 0, bounds.shape.radius, paint);
-    //canvas.restore();
   }
   
   @Override
@@ -111,9 +111,7 @@ public class Bullet extends PhysicalObject {
   @Override
   public void collide(PhysicalObject other, Vector2d avoidVector) {
     super.collide(other, avoidVector);
-    
-    GameState.effects.hit(x, y, avoidVector);
-    
+    Effects.get().hit(x, y, avoidVector);
     kill();
   }
 }

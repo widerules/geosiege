@@ -1,7 +1,12 @@
 package com.geosiege.game.menu;
 
+import java.io.IOException;
+
 import android.os.Bundle;
 
+import com.geosiege.game.core.GameState;
+import com.geosiege.game.level.Level;
+import com.geosiege.game.level.LevelLoader;
 import com.geosiege.game.menu.Levels.Difficulty;
 
 public class MenuLevel {
@@ -9,15 +14,24 @@ public class MenuLevel {
   private static final String SELECTED_LEVEL_BUNDLE_KEY = "level";
   
   public String file;
-  public String name;
   public Difficulty difficulty;
   public boolean locked;
+  public Level level;
   
-  public MenuLevel(String file, String name, Difficulty difficulty, boolean locked) {
+  public MenuLevel(String file, Difficulty difficulty, boolean locked) {
     this.file = file;
-    this.name = name;
     this.locked = locked;
     this.difficulty = difficulty;
+    this.loadMetadata();
+  }
+  
+  private void loadMetadata() {
+    LevelLoader loader = new LevelLoader(GameState.scores, null);
+    try {
+      level = loader.loadLevel("levels/" + file, true);
+    } catch (IOException e) {
+      throw new RuntimeException("Could not load level metadata for " + file, e);
+    }
   }
   
   public int getLevelIconResource() {
@@ -25,7 +39,7 @@ public class MenuLevel {
   }
   
   public void storeInBundle(Bundle bundle) {
-    bundle.putString(SELECTED_LEVEL_BUNDLE_KEY, name);
+    bundle.putString(SELECTED_LEVEL_BUNDLE_KEY, file);
   }
   
   public static final MenuLevel getLevelFromBundle(Bundle bundle) {
@@ -33,6 +47,6 @@ public class MenuLevel {
       throw new RuntimeException("Bundle didn't contain level information.");
     }
     
-    return Levels.getLevelWithName(bundle.getString(SELECTED_LEVEL_BUNDLE_KEY));
+    return Levels.getLevelByFileName(bundle.getString(SELECTED_LEVEL_BUNDLE_KEY));
   }
 }
