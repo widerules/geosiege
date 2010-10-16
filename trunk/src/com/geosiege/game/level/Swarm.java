@@ -3,11 +3,12 @@ package com.geosiege.game.level;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.geosiege.common.GameObject;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.core.Map;
 import com.geosiege.game.level.SpawnPattern.SpawnPoint;
 import com.geosiege.game.ships.EnemyShip;
+import com.zeddic.game.common.GameObject;
+import com.zeddic.game.common.util.ObjectStockpile;
 
 /**
  * Spawns a group of enemies into the world in a pattern. The spawn time of 
@@ -95,7 +96,7 @@ public class Swarm extends GameObject {
   private long countdownTime;
   
   /** Stockpile where enemies can be obtained. */
-  private final EnemyStockpile enemyStockpile;
+  private final ObjectStockpile enemyStockpile;
   
   /** The world map. */
   private final Map map;
@@ -103,7 +104,7 @@ public class Swarm extends GameObject {
   /** A cached flag for when all the ships die. */
   private boolean allDead = false;
   
-  public Swarm(EnemyStockpile enemyStockpile, Map map) {
+  public Swarm(ObjectStockpile enemyStockpile, Map map) {
     this.enemyStockpile = enemyStockpile;
     this.map = map;
   }
@@ -213,8 +214,8 @@ public class Swarm extends GameObject {
       float y = 0;
       
       if (pattern.centeredOnPlayer) {
-        x = GameState.playerShip.x + scale * spawnPoint.xPercent;
-        y = GameState.playerShip.y + scale * spawnPoint.yPercent;
+        x = GameState.player.ship.x + scale * spawnPoint.xPercent;
+        y = GameState.player.ship.y + scale * spawnPoint.yPercent;
       } else {
         x = map.spawnLeft + map.spawnWidth * spawnPoint.xPercent;
         y = map.spawnTop + map.spawnHeight * spawnPoint.yPercent;
@@ -222,6 +223,11 @@ public class Swarm extends GameObject {
 
       if (map.inSpawnableArea(x, y)) {
         spawnedShips.add(ship);
+        
+        if (spawnPoint.hasSpawnAngle()) {
+          ship.setAngle(spawnPoint.shipSpawnAngle);
+        }
+        
         ship.spawn(x, y, spawnTime);      
       }
     } 

@@ -35,11 +35,12 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.geosiege.common.GameSurface;
-import com.geosiege.common.Updater;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.core.GeoSiegeGame;
 import com.geosiege.game.menu.MenuLevel;
+import com.geosiege.game.resources.GameResources;
+import com.zeddic.game.common.GameSurface;
+import com.zeddic.game.common.Updater;
 
 public class GameActivity extends Activity {
   
@@ -60,6 +61,7 @@ public class GameActivity extends Activity {
     // Get the choosen level from the intent parameters.
     Bundle bundle = getIntent().getExtras();
     MenuLevel selectedLevel = MenuLevel.getLevelFromBundle(bundle);
+    GameState.analytics.trackPageView("/levels/" + selectedLevel.level.id);
     
     // Create the drawing Surface;
     surface = new GameSurface(this);
@@ -79,6 +81,7 @@ public class GameActivity extends Activity {
     updater.addEventHandler(GeoSiegeGame.GAME_EVENT_DEAD, new DeadHandler());
     updater.addEventHandler(GeoSiegeGame.GAME_EVENT_LOADED, new LoadedHandler());
     updater.addEventHandler(GeoSiegeGame.GAME_EVENT_WIN, new WinHandler());
+    updater.addEventHandler(GeoSiegeGame.GAME_EVENT_STARTED, new GameStartHandler());
     
     // Add the drawing surface to the screen.
     LinearLayout container = (LinearLayout)findViewById(R.id.game);
@@ -91,9 +94,23 @@ public class GameActivity extends Activity {
   }
   
   @Override
+  public void onPause() {
+    super.onPause();
+    GameState.player.scorer.saveHighscore();
+    GameResources.music.pause();
+  }
+  
+  @Override
+  public void onResume() {
+    super.onResume();
+    GameResources.music.resume();
+  }
+  
+  @Override
   public void onDestroy() {
     Log.d(GameActivity.class.getName(), "Destroying Activity");
-    GameState.stats.save();
+    updater.stop();
+    GameState.cleanup();
     super.onDestroy();
   }
   
@@ -162,13 +179,23 @@ public class GameActivity extends Activity {
     }
   }
   
+  private class GameStartHandler extends Handler {
+   
+    @Override
+    public void handleMessage(Message msg) {
+      if (GameState.preferences.getPlayMusic()) {
+        GameResources.music.playRandomSong();
+      }
+    }
+  }
+  
   private class DeadHandler extends Handler {
     
     @Override
     public void handleMessage(Message msg) {
       AlertDialog dialog = new AlertDialog.Builder(GameState.context)
           .setTitle("Game Over")
-          .setMessage("Final Score: " + GameState.player.experience)
+          .setMessage("Final Score: " + GameState.player.scorer.score)
           .create();
       
       dialog.setButton(
@@ -197,7 +224,7 @@ public class GameActivity extends Activity {
     public void handleMessage(Message msg) {
       AlertDialog dialog = new AlertDialog.Builder(GameState.context)
           .setTitle("Level Complete!")
-          .setMessage("Final Score: " + GameState.player.experience)
+          .setMessage("Final Score: " + GameState.player.scorer.score)
           .create();
       
       dialog.setButton(

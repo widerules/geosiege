@@ -20,28 +20,37 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 
-import com.geosiege.common.effects.Effects;
-import com.geosiege.common.util.ResourceLoader;
-import com.geosiege.game.level.EnemyStockpile;
+import com.geosiege.game.effects.GeoEffects;
+import com.geosiege.game.highscore.HighScores;
 import com.geosiege.game.level.Level;
+import com.geosiege.game.level.Stockpiles;
 import com.geosiege.game.resources.GameResources;
-import com.geosiege.game.ships.PlayerShip;
-import com.geosiege.game.stats.GeoStatsRecorder;
+import com.geosiege.game.storage.GeoStatsRecorder;
+import com.geosiege.game.storage.Preferences;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+import com.zeddic.game.common.effects.Effects;
+import com.zeddic.game.common.util.ResourceLoader;
 
 public class GameState {
+  
+  private static final String ANALYTICS_ID = "UA-18445489-1";
+  private static final int DISPATCH_INTERVAL_SECONDS = 30;
+  
   public static int screenWidth = 800;
   public static int screenHeight = 433;
   public static Vibrator vibrator = null;
   public static Player player = null;
-  public static PlayerShip playerShip = null;
-  public static EnemyStockpile enemyStockpile = null;
+  public static Stockpiles stockpiles = null;
   public static Camera camera = null;
   public static Effects effects = null;
+  public static GeoEffects geoEffects = null;
   public static Context context = null;
   public static Activity activity;
   public static Level level = null;
   public static GeoStatsRecorder stats = null;
   public static Preferences preferences = null;
+  public static HighScores scores = null;
+  public static GoogleAnalyticsTracker analytics = null;
   
   private static boolean resourcesLoaded = false;
   
@@ -51,6 +60,9 @@ public class GameState {
     GameState.context = activity;
     GameState.stats =  new GeoStatsRecorder();
     GameState.preferences = new Preferences();
+    GameState.scores = new HighScores();
+    GameState.analytics = GoogleAnalyticsTracker.getInstance();
+    GameState.analytics.start(ANALYTICS_ID, DISPATCH_INTERVAL_SECONDS, activity);
     
     if (resourcesLoaded)
       return;
@@ -60,6 +72,19 @@ public class GameState {
     GameState.vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
 
     resourcesLoaded = true;
+  }
+  
+  public static void cleanup() {
+    if (GameState.analytics != null) {
+      GameState.analytics.dispatch();
+      GameState.analytics.stop();
+    }
+    
+    if (GameState.stats != null) {
+      GameState.stats.save();
+    }
+    
+    GameResources.cleanup();
   }
   
   public static void setScreen(int width, int height) {

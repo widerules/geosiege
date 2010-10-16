@@ -33,22 +33,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.geosiege.common.ui.SeparatedListAdapter;
+import com.geosiege.game.core.GameState;
 import com.geosiege.game.menu.Levels;
 import com.geosiege.game.menu.MenuLevel;
 import com.geosiege.game.menu.MenuLevelGroup;
+import com.zeddic.game.common.ui.SeparatedListAdapter;
 
 public class LevelListActivity extends Activity {
   
   private ListView listView;
+  private SeparatedListAdapter adapter;
   
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    
+    GameState.setup(this);
+    
+    GameState.analytics.trackPageView("/levels");
+    
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.level_list);
  
-    SeparatedListAdapter adapter = new SeparatedListAdapter(this);
+    adapter = new SeparatedListAdapter(this);
     for (MenuLevelGroup group : Levels.ALL_LEVELS) {
       adapter.addSection(group.name, getLevelAdapter(group.levels));
     }
@@ -65,6 +72,12 @@ public class LevelListActivity extends Activity {
       }
     });
   }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    GameState.cleanup();
+  }
   
   private void startLevel(MenuLevel level) {
     Intent intent = new Intent(this, GameActivity.class);
@@ -76,6 +89,12 @@ public class LevelListActivity extends Activity {
     intent.putExtras(bundle);
     
     startActivity(intent);
+  }
+  
+  @Override
+  public void onResume() {
+    super.onResume();
+    adapter.notifyDataSetChanged();
   }
   
   private MenuLevelAdapter getLevelAdapter(List<MenuLevel> levels) {
@@ -101,10 +120,16 @@ public class LevelListActivity extends Activity {
       MenuLevel o = items.get(position);
       if (o != null) {
         TextView title = (TextView) v.findViewById(R.id.level_row_title);
-        title.setText(o.name);
+        title.setText(o.level.name);
         
         TextView score = (TextView) v.findViewById(R.id.level_row_score);
-        score.setVisibility(View.GONE);
+        
+        // Force reloading the scores in case a new one was set since initially
+        // loading the file.
+        o.level.loadScores(GameState.scores);
+        String scoreText = o.level.highscoreSet ? Integer.toString(o.level.highscore) : "-";
+        score.setText("Highscore: " + scoreText);
+        // score.setVisibility(View.GONE);
         
         ImageView levelIcon = (ImageView) v.findViewById(R.id.level_icon);
         levelIcon.setImageResource(o.getLevelIconResource());
@@ -112,6 +137,4 @@ public class LevelListActivity extends Activity {
       return v;
     }
   }
-  
-  
 }

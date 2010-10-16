@@ -18,20 +18,26 @@ package com.geosiege.game.resources;
 
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 
-import com.geosiege.common.util.ResourceLoader;
 import com.geosiege.game.R;
+import com.zeddic.game.common.util.ResourceLoader;
 
 public class GameResources {
   
   public static Bitmap background;
   public static Bitmap controls;
-  public static Typeface font;
+  public static Typeface spaceFont;
+  public static Typeface squareFont;
+  public static Music music;
   
   private static SoundPool soundPool;
   private static final int SOUND_POOL_SIZE = 40;
   private static final String SPACE_FONT_PATH = "fonts/spaceage.ttf";
+  private static final String SQUARE_FONT_PATH = "fonts/ethnocentric.ttf";
+  
+  //public static MediaPlayer music;
   
   public static int SOUND_GUN_1;
   public static int SOUND_GUN_2;
@@ -41,17 +47,26 @@ public class GameResources {
   public static void load() { 
     background = ResourceLoader.loadBitmap(R.drawable.bg, ResourceLoader.FAST_BITMAP_CONFIG);
     controls = ResourceLoader.loadBitmap(R.drawable.controls, ResourceLoader.FAST_BITMAP_CONFIG);
-    font = ResourceLoader.loadFont(SPACE_FONT_PATH);
-    
+    spaceFont = ResourceLoader.loadFont(SPACE_FONT_PATH);
+    squareFont = ResourceLoader.loadFont(SQUARE_FONT_PATH);
+      
     soundPool = ResourceLoader.createSoundPool(SOUND_POOL_SIZE);
     
     SOUND_GUN_1 = ResourceLoader.loadSound(soundPool, R.raw.laser_01);
     SOUND_GUN_2 = ResourceLoader.loadSound(soundPool, R.raw.gun_02);
     SOUND_GUN_3 = ResourceLoader.loadSound(soundPool, R.raw.gun_03);
-    SOUND_GUN_4 = ResourceLoader.loadSound(soundPool, R.raw.gun_04);
+    SOUND_GUN_4 = ResourceLoader.loadSound(soundPool, R.raw.bullet_weak);
+    
+    music = new Music();
+    //music = MediaPlayer.create(ResourceLoader.c, R.raw.track4);
+  }
+  
+  public static void cleanup() {
+    music.cleanup();
+    soundPool.release();
   }
   
   public static void play(int id) {
-    ResourceLoader.playSound(soundPool, id, 0, 2f);
+    ResourceLoader.playSound(soundPool, id, 0, 1f);
   }
 }

@@ -17,6 +17,7 @@
 package com.geosiege.game.guns;
 
 import com.geosiege.game.guns.control.DirectionalGunControl;
+import com.geosiege.game.guns.control.RandomGunControl;
 import com.geosiege.game.ships.Ship;
 
 public class Arsenal {
@@ -24,50 +25,58 @@ public class Arsenal {
   public static Gun getPeaShooter(Ship owner) {
     Gun gun = new GunBuilder()
       .withOwner(owner)
-      .withType(GunBuilder.TYPE_BULLETS)
-      .withBulletSpeed(110f)
-      .withMaxBullets(50)
-      .withCooldown(100)
+      .withBulletSpeed(60f)
+      .withCooldown(300)
       .withFireOffset(40)
       .build();
 
     return gun;
   }
   
-  public static Gun getTriGun(Ship owner) {
-    Gun gun1 = getPeaShooter(owner);
-    gun1.aimAngle = 0;
-    Gun gun2 = getPeaShooter(owner);
-    gun2.aimAngle = 5;
-    Gun gun3 = getPeaShooter(owner);
-    gun3.aimAngle = -5;
-    
-    Gun combo = new GunBuilder()
-      .withType(GunBuilder.TYPE_GROUP)
-      .withSubGun(gun1)
-      .withSubGun(gun2)
-      .withSubGun(gun3)
+  public static Gun getSniper(Ship owner) {
+    Gun gun = new GunBuilder()
+      .withOwner(owner)
+      .withBulletSpeed(120f)
+      .withCooldown(2500)
+      .withFireOffset(40)
+      .withBullet(ShardBullet.class)
       .build();
-
-    return combo;
+    
+    return gun;
+  }
+  
+  public static Gun getTriGun(Ship owner) {
+    Gun gun = getPeaShooter(owner);
+    gun.multiplier = 3;
+    gun.multiplierStartAngle = -5;
+    gun.multiplierAngleBetweenBullets = 5;
+    
+    return gun;
+  }
+  
+  public static Gun getBombBurst(Ship owner) {
+    Gun gun = new GunBuilder()
+      .withOwner(owner)
+      .withBulletSpeed(110f)
+      .withCooldown(0)
+      .withFireOffset(20)
+      .withClipSize(10)
+      .withReloadTime(2000)
+      .withAutoFire(false)
+      .withControl(new RandomGunControl())
+      .withBullet(ShardBullet.class)
+      .build();
+    
+    return gun;
   }
   
   public static Gun getDeathBlossom(Ship owner) {
-    Gun gun1 = getPeaShooter(owner);
-    gun1.control = new DirectionalGunControl(owner, 0);
-    
-    Gun gun2 = getPeaShooter(owner);
-    gun2.control = new DirectionalGunControl(owner, 180);
-    
-    Gun combo = new GunBuilder()
-      .withType(GunBuilder.TYPE_GROUP)
-      .withSubGun(gun1)
-      .withSubGun(gun2)
-      .build();
-    
-    combo.setAutoFire(true);
-    combo.setFireOffset(20);
-    
-    return combo;
+    Gun gun = getPeaShooter(owner);
+    gun.multiplier = 2;
+    gun.multiplierAngleBetweenBullets = 180;
+    gun.setAutoFire(true);
+    gun.setFireOffset(20);
+    gun.setGunControl(new DirectionalGunControl(owner));
+    return gun;
   }
 }

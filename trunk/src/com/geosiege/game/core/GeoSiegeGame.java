@@ -20,23 +20,19 @@ import java.io.IOException;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.view.MotionEvent;
 
-import com.geosiege.common.Game;
-import com.geosiege.common.collision.CollisionManager;
-import com.geosiege.common.effects.Effects;
-import com.geosiege.common.ui.JoystickControl;
-import com.geosiege.common.ui.ProgressBar;
-import com.geosiege.common.util.Countdown;
-import com.geosiege.game.level.EnemyStockpile;
+import com.geosiege.game.effects.GeoEffects;
 import com.geosiege.game.level.LevelLoader;
+import com.geosiege.game.level.Stockpiles;
 import com.geosiege.game.menu.MenuLevel;
 import com.geosiege.game.resources.GameResources;
-import com.geosiege.game.ships.DeathStar;
-import com.geosiege.game.ships.PlayerShip;
-import com.geosiege.game.ships.SimpleEnemyShip;
+import com.geosiege.game.storage.Preferences;
+import com.zeddic.game.common.Game;
+import com.zeddic.game.common.collision.CollisionManager;
+import com.zeddic.game.common.effects.Effects;
+import com.zeddic.game.common.ui.JoystickControl;
+import com.zeddic.game.common.util.Countdown;
 
 public class GeoSiegeGame extends Game {
 
@@ -44,6 +40,7 @@ public class GeoSiegeGame extends Game {
   public static final int GAME_EVENT_DEAD = 1;
   public static final int GAME_EVENT_LOADED = 2;
   public static final int GAME_EVENT_PAUSED = 3;
+  public static final int GAME_EVENT_STARTED = 4;
   
   private static final int GAME_STATE_SETUP = 0;
   private static final int GAME_STATE_PLAYING = 1;
@@ -53,38 +50,27 @@ public class GeoSiegeGame extends Game {
   private static final long FIRST_SPAWN_DELAY = 3000;
   
   private int gameState;
-  private ProgressBar healthBar;
   private JoystickControl moveControls;
   private JoystickControl directionFireControls;
+  private GameStatusBar statusBar = new GameStatusBar();
   
-  // private static final String PAUSED_STRING = "Resume";
-  // private static final String PAUSE_STRING = "Pause";
   private static final int MAX_WORLD_WIDTH = 2000;
   private static final int MAX_WORLD_HEIGHT = 2000;
-  private static final Paint TEXT_PAINT;
-  static {
-    TEXT_PAINT = new Paint();
-    TEXT_PAINT.setTextSize(30);
-    TEXT_PAINT.setStrikeThruText(false);
-    TEXT_PAINT.setUnderlineText(false);
-    TEXT_PAINT.setTypeface(GameResources.font);
-    TEXT_PAINT.setTextAlign(Align.RIGHT);
-    TEXT_PAINT.setColor(Color.WHITE);
-  }
-  
-  private MenuLevel menuLevel;
-  private Countdown winCountdown;
 
+  private MenuLevel menuLevel;
+  private Countdown winCountdown = new Countdown(5000);
+  private Countdown pauseButtonCooldown = new Countdown(100);
+  
   public GeoSiegeGame(MenuLevel menuLevel) {
     this.menuLevel = menuLevel;
   }
   
   @Override
-  public void init() {
+  public void init(int screenWidth, int screenHeight) {
     if (this.initialized)
       return;
     
-    winCountdown = new Countdown(5000);
+    GameState.setScreen(screenWidth, screenHeight);
     
     // Setup the collision system.
     CollisionManager.setup(MAX_WORLD_WIDTH, MAX_WORLD_HEIGHT);
@@ -92,13 +78,13 @@ public class GeoSiegeGame extends Game {
 
     // Populate the GameState
     GameState.player = new Player();
-    GameState.enemyStockpile = new EnemyStockpile();
-    GameState.playerShip = new PlayerShip();
+    GameState.stockpiles = new Stockpiles();
     GameState.effects = Effects.get();
+    GameState.geoEffects = GeoEffects.get();
     GameState.camera = new Camera();
     
-    // Create the enemies. 
-    populateEnemyStockpile(GameState.enemyStockpile);
+    // Create the enemies and reusable game objects. 
+    GameState.stockpiles.populate();
     
     // Add UI elements
     setupUiElements();
@@ -111,13 +97,8 @@ public class GeoSiegeGame extends Game {
     triggerEvent(GAME_EVENT_LOADED);
   }
   
-  private void populateEnemyStockpile(EnemyStockpile enemyStockpile) {
-    enemyStockpile.createSupply(SimpleEnemyShip.class, 100);
-    enemyStockpile.createSupply(DeathStar.class, 50);
-  }
-  
   private void setupUiElements() {
-    healthBar = new ProgressBar(GameState.screenWidth - 35, 40, 80, 100);
+    //healthBar = new ProgressBar(GameState.screenWidth - 35, 40, 80, 100);
     
     // Compute possible x/y locations for the joysticks.
     float radius = JoystickControl.BORDER_RADIUS;
@@ -142,8 +123,8 @@ public class GeoSiegeGame extends Game {
       fireY = bottom;
     }
 
-    moveControls = new JoystickControl(moveX, moveY);
-    directionFireControls = new JoystickControl(fireX, fireY);
+    moveControls = new JoystickControl(moveX, moveY, false, Color.argb(255, 240, 240, 240));
+    directionFireControls = new JoystickControl(fireX, fireY, false, Color.argb(255, 214, 28, 28));
     
     // Swap locations of move/fire if requested.
     if (GameState.preferences.getSwapJoysticks()) {
@@ -164,24 +145,26 @@ public class GeoSiegeGame extends Game {
   }
   
   private void resetGameObjects() {
-    GameState.enemyStockpile.reset();
+    GameState.stockpiles.reset();
     GameState.player.reset();
-    GameState.playerShip.reset();
     GameState.effects.reset();
     winCountdown.reset();
+    pauseButtonCooldown.restart();
   }
   
   public void loadLevel() {
 
     resetGameObjects();
     try {
-      LevelLoader loader = new LevelLoader(GameState.enemyStockpile, FIRST_SPAWN_DELAY);
+      LevelLoader loader = new LevelLoader(GameState.scores, GameState.stockpiles.enemies, FIRST_SPAWN_DELAY);
       GameState.level = loader.loadLevel("levels/" + menuLevel.file);
     } catch (IOException e) {
       throw new RuntimeException("Unable load load level!", e);
     }
-    GameState.playerShip.centerOnMap();
+    GameState.player.spawnShipInMiddle();
     gameState = GAME_STATE_PLAYING;
+    
+    triggerEvent(GAME_EVENT_STARTED);
   }
   
   public void restart() {
@@ -189,11 +172,13 @@ public class GeoSiegeGame extends Game {
   }
   
   public void pause() {
+    super.pause();
     gameState = GAME_STATE_PAUSED;
     triggerEvent(GAME_EVENT_PAUSED);
   }
   
   public void resume() {
+    super.resume();
     gameState = GAME_STATE_PLAYING;
   }
   
@@ -202,8 +187,8 @@ public class GeoSiegeGame extends Game {
 
     GameState.camera.apply(c);
     GameState.level.draw(c);
-    GameState.enemyStockpile.draw(c);
-    GameState.playerShip.draw(c);
+    GameState.stockpiles.draw(c);
+    GameState.player.draw(c);
     GameState.effects.draw(c);
     GameState.camera.revert(c);
     
@@ -215,6 +200,8 @@ public class GeoSiegeGame extends Game {
   @Override
   public void update(long time) {
 
+    pauseButtonCooldown.update(time);
+    
     if (gameState != GAME_STATE_PLAYING) {
       return;
     }
@@ -222,8 +209,8 @@ public class GeoSiegeGame extends Game {
     GameState.stats.recordTimePlayed(time);
     
     GameState.level.update(time);
-    GameState.enemyStockpile.update(time);
-    GameState.playerShip.update(time);
+    GameState.stockpiles.update(time);
+    GameState.player.update(time);
     GameState.effects.update(time);
     
     if (GameState.level.complete) {
@@ -239,32 +226,23 @@ public class GeoSiegeGame extends Game {
       }
     }
     
-    if (GameState.playerShip.isDead()) {
+    if (GameState.player.gameOver) {
       endGame();
       return;
     }
     
-    if (GameState.playerShip.isDying()) {
-      return;
-    }
-    
     if (directionFireControls.isPressed()) {
-      GameState.playerShip.fire(directionFireControls.getAngle());
+      GameState.player.ship.fire(directionFireControls.getAngle());
     }
     moveControls.update(time);
     
-    GameState.camera.ensureOnScreen(GameState.playerShip);
+    GameState.camera.ensureOnScreen(GameState.player.ship);
   }
   
   private void drawUiElements(Canvas c) {
     moveControls.draw(c);
     directionFireControls.draw(c);
-    
-    c.drawText(GameState.player.experienceString, GameState.screenWidth - 30, 30, TEXT_PAINT);
-    
-    healthBar.value = GameState.playerShip.health;
-    healthBar.max = GameState.player.maxHealth;
-    healthBar.draw(c);
+    statusBar.draw(c);
   }
   
   //// USER INPUT
@@ -273,48 +251,35 @@ public class GeoSiegeGame extends Game {
    * Handle movement.
    */
   public boolean onTouchEvent(MotionEvent e) {
-    if (GameState.playerShip.isDead())
-      return true;
+    //if (GameState.player.ship.isDead())
+    //  return true;
     
     moveControls.onTouchEvent(e);
     directionFireControls.onTouchEvent(e);
     
-    synchronized (GameState.playerShip) {
+    synchronized (GameState.player.ship) {
       // Update the state of the ship based on the latest control input.
-      GameState.playerShip.setAngle(moveControls.getAngle());
-      GameState.playerShip.setVelocity(
+      GameState.player.ship.setAngle(moveControls.getAngle());
+      GameState.player.ship.setVelocity(
           moveControls.getXVelocity() * 100,
           moveControls.getYVelocity() * 100);
     }
-    
-    float x = e.getX();
-    float y = e.getY();
-    if ( x > GameState.screenWidth - 100 &&
-         y < GameState.screenHeight - 50) {
-      gameState = (gameState == GAME_STATE_PAUSED ? GAME_STATE_PLAYING : GAME_STATE_PAUSED);
-    } 
 
-    //try {
-    //  Thread.sleep(16);
-    //} catch (InterruptedException ex) {}
+    try {
+      Thread.sleep(16);
+    } catch (InterruptedException ex) {}
 
     return true;
   }
   
-  @Override
-  public void onFocusChangedEvent(boolean hasFocus) {
-    if (initialized) {
-      if (!hasFocus) {
-        sleep();
-        pause();
-      } else {
-        wakeup();
-      }
-    }
-  }
-  
-  @Override
-  public void onLayoutChangedEvent(boolean changed, int left, int top, int right, int bottom) {
-    GameState.setScreen(right - left, bottom - top);
+  public boolean onTrackballEvent(MotionEvent e) {
+    
+    if (e.getAction() != MotionEvent.ACTION_DOWN || !pauseButtonCooldown.isDone())
+      return true;
+    
+    this.gameState = gameState == GAME_STATE_PAUSED ? GAME_STATE_PLAYING : GAME_STATE_PAUSED;
+    
+    pauseButtonCooldown.restart();
+    return true;
   }
 }

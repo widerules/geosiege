@@ -18,12 +18,12 @@ package com.geosiege.game.ships;
 
 import android.graphics.Canvas;
 
-import com.geosiege.common.PhysicalObject;
-import com.geosiege.common.animation.Transitions;
-import com.geosiege.common.util.Countdown;
-import com.geosiege.common.util.Vector2d;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;
+import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.game.common.transistions.Transitions;
+import com.zeddic.game.common.util.Countdown;
+import com.zeddic.game.common.util.Vector2d;
 
 
 public class EnemyShip extends Ship {
@@ -46,9 +46,6 @@ public class EnemyShip extends Ship {
 
     spawnCountdown.reset(spawnTime);
     spawnCountdown.start();
-    
-    // Start a spawning effect.
-    GameState.effects.implode(x, y, spawnTime);
   }
   
   public void update(long time) {
@@ -60,6 +57,7 @@ public class EnemyShip extends Ship {
       // If the spawn is complete, allow updates, otherwise quit.
       if (spawnCountdown.done) {
         spawnCountdown.reset();
+        scale = 1;
       } else {
         return;
       }
@@ -72,8 +70,9 @@ public class EnemyShip extends Ship {
     super.draw(canvas);
     
     if (isSpawning()) {
-      paint.setAlpha((int) (255 * 
-          Transitions.getProgress(Transitions.EXPONENTIAL, spawnCountdown.getProgress())));
+      double progress = Transitions.getProgress(Transitions.EXPONENTIAL, spawnCountdown.getProgress());
+      paint.setAlpha((int) Math.max(255, 255 * progress));
+      scale = (float) progress; 
     } else {
       paint.setAlpha(255);
     }
@@ -84,7 +83,7 @@ public class EnemyShip extends Ship {
     super.collide(object, avoidVector);
     
     if (object instanceof Bullet) {
-      die();
+      damage(20);
     }
   }
   
@@ -96,12 +95,21 @@ public class EnemyShip extends Ship {
     return !active;
   }
   
+  @Override
+  public void damage(float damage) {
+    health -= damage;
+    if (health <= 0) {
+      health = 0;
+      die();
+    }
+  }
+  
   public void die() {
     if (isDead())
       return;
     
-    GameState.effects.explode(x, y);
-    GameState.effects.explodeWithGravity(x, y, GameState.playerShip);
+    GameState.geoEffects.shockwave(x, y);
+    GameState.player.recordKill(getClass());
     GameState.stats.recordKill();
     
     kill();

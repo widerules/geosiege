@@ -19,8 +19,8 @@ package com.geosiege.game.core;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-import com.geosiege.common.animation.Transition;
-import com.geosiege.common.animation.Transitions;
+import com.zeddic.game.common.transistions.Transition;
+import com.zeddic.game.common.transistions.Transitions;
 
 public class RotatingBackgroundLayer extends BackgroundLayer {
 

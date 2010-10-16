@@ -18,7 +18,7 @@ package com.geosiege.game.core;
 
 import android.graphics.Canvas;
 
-import com.geosiege.common.PhysicalObject;
+import com.zeddic.game.common.PhysicalObject;
 
 /**
  * A camera that centers the view around the user. The camera uses a 

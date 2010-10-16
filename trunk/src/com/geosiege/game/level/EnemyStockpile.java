@@ -5,9 +5,9 @@ import java.util.Map;
 
 import android.graphics.Canvas;
 
-import com.geosiege.common.GameObject;
-import com.geosiege.common.util.ObjectPoolManager;
 import com.geosiege.game.ships.EnemyShip;
+import com.zeddic.game.common.GameObject;
+import com.zeddic.game.common.util.ObjectPoolManager;
 
 public class EnemyStockpile extends GameObject {
   

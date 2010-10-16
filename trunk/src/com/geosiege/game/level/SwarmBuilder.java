@@ -1,6 +1,7 @@
 package com.geosiege.game.level;
 
 import com.geosiege.game.core.Map;
+import com.zeddic.game.common.util.ObjectStockpile;
 
 /**
  * Builds a new {@link Swarm} of enemies.
@@ -11,7 +12,7 @@ public class SwarmBuilder {
   
   Swarm swarm;
   
-  public SwarmBuilder(EnemyStockpile stockpile, Map map) {
+  public SwarmBuilder(ObjectStockpile stockpile, Map map) {
     swarm = new Swarm(stockpile, map);
   }
   
