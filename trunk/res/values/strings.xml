@@ -20,4 +20,12 @@
 <string name="preference_swap_joysticks_on">Fire on the left. Move on the right.</string>
 <string name="preference_swap_joysticks_off">Move on the left. Fire on the right.</string>
 <string name="preference_show_fps">Show FPS</string>
+<string name="preference_debug_mode">Debug Mode</string>
+<string name="preference_debug_mode_summary">Grants greater health for debugging.</string>
+<string name="preference_tracking_title">Usage Tracking</string>
+<string name="preference_tracking_summary">Note: Geo Siege may collect anonymous game play data to help improve the quality of future releases.</string>
+<string name="preference_about">About</string>
+<string name="preference_about_title">Created By</string>
+<string name="preference_about_summary">Scott Bailey, Copyright 2010</string>
+<string name="preference_play_music">Game Music</string>
 </resources>
