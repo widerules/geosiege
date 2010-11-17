@@ -1,13 +1,14 @@
 package com.geosiege.game.upgrade;
 
-public class Upgrade {
+import android.content.SharedPreferences;
 
-  public String key;
-  public String name;
-  public int value;
-  
-  public Upgrade(String key, String name) {
-    this.key = key;
-    this.name = name;
-  }
+public interface Upgrade {
+  void buy();
+  boolean canAfford();
+  boolean isBought();
+  boolean isAvailable();
+  void load(SharedPreferences prefs);
+  void save(SharedPreferences.Editor editor);
+  int getCost();
+  String getName();
 }

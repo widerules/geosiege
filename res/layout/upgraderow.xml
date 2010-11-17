@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="0dip">
+    
+	 <Button
+        android:id="@+id/upgrade_buy_button"
+        android:layout_width="102dip"
+        android:layout_height="96dip"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Buy"
+        style="@style/SideButton" />
+		    
+   <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_toLeftOf="@+id/upgrade_buy_button"
+    android:orientation="vertical"
+    android:layout_marginLeft="5dip"
+    android:layout_centerVertical="true"
+    android:gravity="center_vertical">
+   
+    <LinearLayout
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginBottom="5dip"
+     android:orientation="horizontal">
+   
+	     <TextView
+	        android:id="@+id/upgrade_name"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Upgrade"
+	        android:textStyle="bold"
+	        android:textSize="16dip"/>
+	       
+	    <TextView
+	        android:id="@+id/upgrade_cost"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="$500"
+	        android:layout_marginLeft="5dip"
+	        android:textSize="16dip"/>
+   
+    </LinearLayout> 
+   
+    <com.geosiege.game.ui.UpgradeBar
+       android:layout_height="wrap_content"
+       android:layout_width="wrap_content"
+       android:id="@+id/upgrade_bar"/>    
+   
+   </LinearLayout>
+</RelativeLayout>

@@ -1,45 +1,274 @@
-LevelName:SimpleName
+LevelName:Level 1
+LevelId:9
 
 Trigger:Delay
-SpawnDelay:1000
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
 Pattern:
-[xx]
-[xx]
-
-Trigger:LastDeadRatio
-DeadRatio:.50
-SpawnDelay:1000
-Pattern:
-[   ]
-[ x ]
-[   ]
-
-Trigger:LastDeadRatio
-DeadRatio:.50
-SpawnDelay:1000
-Pattern:
-[x x]
-[ x ]
-[x x]
+[   v   v   ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[ ^       ^ ]
 
 Trigger:LastDead
-SpawnDelay:2000
-SpawnTime:500
-Scale:250
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:1000
+Scale:200
 Pattern:
-[xxxxx]
-[x*x*x]
-[xxpxx]
-[x*x*x]
-[xxxxx]
+[           ]
+[           ]
+[           ]
+[>         <]
+[>         <]
+[>         <]
+[           ]
+[           ]
+[           ]
 
 Trigger:LastDead
-SpawnDelay:2000
-SpawnTime:500
-Scale:250
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:1000
+Scale:200
 Pattern:
-[xxxxx]
-[x*x*x]
-[xxpxx]
-[x*x*x]
-[xxxxx]
+[           ]
+[           ]
+[           ]
+[           ]
+[   x x x   ]
+[           ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[     x     ]
+[    xxx    ]
+[     x     ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:1000
+SpawnTime:1000
+Scale:200
+Pattern:
+[xx       xx]
+[x         x]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[x         x]
+[xx       xx]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[>         <]
+[>         <]
+[>         <]
+[>         <]
+[>         <]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:500
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[    ^^^    ]
+[    <x>    ]
+[    vvv    ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[ v v v v v ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[  ^ ^ ^ ^  ]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[>          ]
+[          <]
+[>          ]
+[          <]
+[>          ]
+[          <]
+[>          ]
+[          <]
+[>          ]
+
+Trigger:Delay
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[     x     ]
+[    x*x    ]
+[     x     ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[    ^ ^    ]
+[     *     ]
+[    v v    ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:500
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[x         x]
+[x         x]
+[x         x]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:500
+SpawnTime:1000
+Scale:200
+Pattern:
+[    xxx    ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[    xxx    ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[    vvv    ]
+[    vvv    ]
+[           ]
+[           ]
+[           ]
+[           ]
+[           ]
+[    ^^^    ]
+[    ^^^    ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[    * *    ]
+[           ]
+[    * *    ]
+[           ]
+[           ]
+[           ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[ ^       ^ ]
+[<x>     <x>]
+[ v       v ]
+[           ]
+[           ]
+[           ]
+[ ^       ^ ]
+[<x>     <x>]
+[ v       v ]
+
+Trigger:LastDead
+DeadRatio:0.50
+SpawnDelay:0
+SpawnTime:1000
+Scale:200
+Pattern:
+[           ]
+[           ]
+[           ]
+[     ^     ]
+[    <*>    ]
+[     v     ]
+[           ]
+[           ]
+[           ]

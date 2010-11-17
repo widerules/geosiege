@@ -13,21 +13,21 @@ public class Levels {
       "Beta Levels",
       Arrays.asList(
           new MenuLevel("1.txt", Difficulty.EASY, false),
-          new MenuLevel("test.txt", Difficulty.HARD, false)
+          new MenuLevel("2.txt", Difficulty.HARD, false)
       ));
   
   public static final MenuLevelGroup ENEMY_CHALLENGES = new MenuLevelGroup(
       "Enemy Challenges",
       Arrays.asList(
-          new MenuLevel("arrow_test.txt", Difficulty.EASY, false),
-          new MenuLevel("blinker_test.txt", Difficulty.MODERATE, false),
-          new MenuLevel("bomb_test.txt", Difficulty.HARD, false)
+          new MenuLevel("1.txt", Difficulty.EASY, false),
+          new MenuLevel("1.txt", Difficulty.MODERATE, false),
+          new MenuLevel("2.txt", Difficulty.HARD, false)
       ));
   
   public static final MenuLevelGroup EASY_LEVELS = new MenuLevelGroup(
       "Easy",
       Arrays.asList(
-          new MenuLevel("test.txt", Difficulty.SIMPLE, false),
+          new MenuLevel("1.txt", Difficulty.SIMPLE, false),
           new MenuLevel("1.txt", Difficulty.SIMPLE, false),
           new MenuLevel("1.txt", Difficulty.EASY, false)
       ));
@@ -45,9 +45,9 @@ public class Levels {
       ));
 
   public static final List<MenuLevelGroup> ALL_LEVELS = Arrays.asList(
-      BETA_LEVELS,
-      ENEMY_CHALLENGES
-      /*EASY_LEVELS,
+      BETA_LEVELS
+      /*ENEMY_CHALLENGES,
+      EASY_LEVELS,
       MEDIUM_LEVELS,
       HARD_LEVELS*/);
   

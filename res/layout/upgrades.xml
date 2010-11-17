@@ -11,8 +11,18 @@
       android:layout_x="0dp"
       android:layout_y="0dp"
       android:gravity="center_horizontal">
-        
-      <ListView android:id="@+id/levelsListView"
+      
+      <TextView android:id="@+id/upgradeMoneyText"
+          android:background="#299e01"
+          android:textColor="#91ff6c"
+          android:textSize="20sp"
+          android:text="$5000"
+          android:padding="8dp"
+          android:gravity="center_horizontal"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content" />
+   
+      <ListView android:id="@+id/upgradesListView"
           android:layout_width="fill_parent"
           android:layout_height="fill_parent" />
         

@@ -160,6 +160,10 @@ public class Gun extends Component {
     }
   }
   
+  public void setOwner(PhysicalObject owner) {
+    this.owner = owner;
+  }
+  
   public void setFireOffset(float fireOffset) {
     this.fireOffset = fireOffset;
   }

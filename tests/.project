@@ -3,6 +3,7 @@
 	<name>GeoTest</name>
 	<comment></comment>
 	<projects>
+		<project>Common</project>
 		<project>Geo</project>
 	</projects>
 	<buildSpec>

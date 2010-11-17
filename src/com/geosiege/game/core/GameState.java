@@ -27,6 +27,7 @@ import com.geosiege.game.level.Stockpiles;
 import com.geosiege.game.resources.GameResources;
 import com.geosiege.game.storage.GeoStatsRecorder;
 import com.geosiege.game.storage.Preferences;
+import com.geosiege.game.upgrade.Upgrades;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.zeddic.game.common.effects.Effects;
 import com.zeddic.game.common.util.ResourceLoader;
@@ -49,6 +50,7 @@ public class GameState {
   public static Level level = null;
   public static GeoStatsRecorder stats = null;
   public static Preferences preferences = null;
+  public static Upgrades upgrades = null;
   public static HighScores scores = null;
   public static GoogleAnalyticsTracker analytics = null;
   
@@ -58,14 +60,16 @@ public class GameState {
     
     GameState.activity = activity;
     GameState.context = activity;
-    GameState.stats =  new GeoStatsRecorder();
-    GameState.preferences = new Preferences();
-    GameState.scores = new HighScores();
-    GameState.analytics = GoogleAnalyticsTracker.getInstance();
-    GameState.analytics.start(ANALYTICS_ID, DISPATCH_INTERVAL_SECONDS, activity);
     
     if (resourcesLoaded)
       return;
+    
+    GameState.stats =  new GeoStatsRecorder();
+    GameState.preferences = new Preferences();
+    GameState.upgrades = new Upgrades();
+    GameState.scores = new HighScores();
+    GameState.analytics = GoogleAnalyticsTracker.getInstance();
+    GameState.analytics.start(ANALYTICS_ID, DISPATCH_INTERVAL_SECONDS, activity);
 
     ResourceLoader.init(context);
     GameResources.load();
@@ -84,7 +88,13 @@ public class GameState {
       GameState.stats.save();
     }
     
+    if (GameState.upgrades != null) {
+      GameState.upgrades.save();
+    }
+    
     GameResources.cleanup();
+    
+    resourcesLoaded = false;
   }
   
   public static void setScreen(int width, int height) {
