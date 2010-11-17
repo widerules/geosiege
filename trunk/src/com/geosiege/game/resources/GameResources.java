@@ -18,7 +18,6 @@ package com.geosiege.game.resources;
 
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 
 import com.geosiege.game.R;

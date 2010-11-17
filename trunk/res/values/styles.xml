@@ -9,5 +9,24 @@
       <item name="android:textSize">18sp</item>
       <item name="android:background">@android:drawable/menuitem_background</item>
 	</style>
+	
+	<style name="SideButton">
+      <item name="android:textColor">#FFFFFF</item>
+      <item name="android:textSize">14sp</item>
+      <item name="android:background">@drawable/side_button</item>
+  </style>
+  
+  <style name="SideButtonToggleOn">
+      <item name="android:textColor">#FFFFFF</item>
+      <item name="android:textSize">14sp</item>
+      <item name="android:background">@drawable/side_button_toggle_on</item>
+  </style>
+
+  <style name="SideButtonToggleOff">
+      <item name="android:textColor">#FFFFFF</item>
+      <item name="android:textSize">14sp</item>
+      <item name="android:background">@drawable/side_button_toggle_off</item>
+  </style>
+
 
 </resources>

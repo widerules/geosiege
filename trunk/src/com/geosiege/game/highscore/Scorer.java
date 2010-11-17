@@ -23,17 +23,18 @@ import com.zeddic.game.common.stage.StageIncrementor;
  */
 public class Scorer {
 
+  private static final int SCORE_TO_MONEY_DIVISOR = 10;
   private static final long TIME_BETWEEN_MULTIKILLS = 500;
   private static final int DEFAULT_POINTS = 5;
   private static final String NEW_HIGHSCORE = "New Highscore!";
   private static final Map<Class<? extends EnemyShip>, Integer> SCORE_MAP;
   static {
     SCORE_MAP = new HashMap<Class<? extends EnemyShip>, Integer>();
-    SCORE_MAP.put(SimpleEnemyShip.class, 5);
+    SCORE_MAP.put(SimpleEnemyShip.class, 10);
     SCORE_MAP.put(DeathStar.class, 10);
-    SCORE_MAP.put(DaBomb.class, 2);
+    SCORE_MAP.put(DaBomb.class, 10);
     SCORE_MAP.put(Blinker.class, 15);
-    SCORE_MAP.put(Arrow.class, 3);
+    SCORE_MAP.put(Arrow.class, 8);
   }
  
   private static DecimalFormat format = new DecimalFormat();
@@ -105,6 +106,10 @@ public class Scorer {
     if (hitHighscore) {
       GameState.scores.setHighScore(GameState.level.id, score);
     }
+  }
+
+  public int getScoreAsMoney() {
+    return score / SCORE_TO_MONEY_DIVISOR;
   }
   
   public void addPoints(int points) {

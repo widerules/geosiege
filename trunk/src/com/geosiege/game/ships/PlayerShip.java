@@ -23,10 +23,8 @@ import android.graphics.Paint;
 import com.geosiege.game.components.MapBoundsComponent;
 import com.geosiege.game.components.ParticleTail;
 import com.geosiege.game.core.GameState;
-import com.geosiege.game.guns.Arsenal;
 import com.geosiege.game.guns.Bullet;
 import com.geosiege.game.guns.Gun;
-import com.geosiege.game.resources.GameResources;
 import com.zeddic.game.common.PhysicalObject;
 import com.zeddic.game.common.collision.CollisionComponent;
 import com.zeddic.game.common.collision.CollisionManager;
@@ -55,12 +53,13 @@ public class PlayerShip extends Ship {
         .add(-12, -8)
         .build();
   }
-  
-  private Gun gun;
-  private ComponentManager components;
+
   public float maxHealth = 200;
   public float health = 200;
   private Countdown soundCountdown = new Countdown(400);
+  private Gun gun;
+  private ComponentManager components;
+  private float speed;
 
   public PlayerShip() {
     this(0, 0);
@@ -72,16 +71,19 @@ public class PlayerShip extends Ship {
     paint = new Paint(PAINT);
     setBounds(new Bounds(new Circle(8)));
     
-    gun = Arsenal.getTriGun(this);
-    gun.setFireCooldown(200);
-    gun.setBulletSpeed(150);
-    gun.setFireOffset(40);
+    speed = GameState.upgrades.getSpeed();
+    
+    gun = GameState.upgrades.getGun();
+    gun.setOwner(this);
     
     components = new ComponentManager(this);
     components.add(new CollisionComponent(this, CollisionManager.TYPE_HIT_RECEIVE));
     components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
-    components.add(new ParticleTail(this, 11));
     components.add(gun);
+    
+    if (GameState.upgrades.isTailEnabled()) {
+      components.add(new ParticleTail(this, 11));
+    }
   }
   
   public void reset() {
@@ -108,6 +110,10 @@ public class PlayerShip extends Ship {
     this.y = GameState.level.map.top + GameState.level.map.height / 2;
   }*/
   
+  public void updateSpeed(float scaleX, float scaleY) {
+    this.setVelocity(scaleX * speed, scaleY * speed);
+  }
+  
   @Override
   public void update(long time) {
     
@@ -125,10 +131,9 @@ public class PlayerShip extends Ship {
     //if (!soundCountdown.isDone())
     //  return;
     
-    GameResources.play(GameResources.SOUND_GUN_4);
+    //GameResources.play(GameResources.SOUND_GUN_4);
     
-    soundCountdown.restart();
-    
+    //soundCountdown.restart();
   }
   
   @Override

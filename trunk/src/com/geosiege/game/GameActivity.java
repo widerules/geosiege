@@ -52,7 +52,7 @@ public class GameActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.game);
     
@@ -110,10 +110,19 @@ public class GameActivity extends Activity {
   public void onDestroy() {
     Log.d(GameActivity.class.getName(), "Destroying Activity");
     updater.stop();
+    applyEarnedMoney();
     GameState.cleanup();
     super.onDestroy();
   }
   
+  private void applyHighscore() {
+    GameState.player.scorer.saveHighscore();
+  }
+  
+  private void applyEarnedMoney() {
+    GameState.upgrades.addMoney(GameState.player.scorer.getScoreAsMoney());
+  }
+
   private void showMessage(String message) {    
     TextView messageText = (TextView)findViewById(R.id.gameMessageText);
     messageText.setText(message);
@@ -195,13 +204,17 @@ public class GameActivity extends Activity {
     public void handleMessage(Message msg) {
       AlertDialog dialog = new AlertDialog.Builder(GameState.context)
           .setTitle("Game Over")
-          .setMessage("Final Score: " + GameState.player.scorer.score)
+          .setMessage(
+              "Final Score: " + GameState.player.scorer.score + ". " +
+              "Earned $" + GameState.player.scorer.getScoreAsMoney())
           .create();
       
       dialog.setButton(
           AlertDialog.BUTTON1, "Play Again",
           new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+              applyHighscore();
+              applyEarnedMoney();
               game.restart();
             }
           });
@@ -224,13 +237,17 @@ public class GameActivity extends Activity {
     public void handleMessage(Message msg) {
       AlertDialog dialog = new AlertDialog.Builder(GameState.context)
           .setTitle("Level Complete!")
-          .setMessage("Final Score: " + GameState.player.scorer.score)
+          .setMessage(
+              "Final Score: " + GameState.player.scorer.score + ". " +
+              "Earned $" + GameState.player.scorer.getScoreAsMoney())
           .create();
       
       dialog.setButton(
           AlertDialog.BUTTON1, "Play Again",
           new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+              applyHighscore();
+              applyEarnedMoney();
               game.restart();
             }
           });

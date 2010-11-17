@@ -26,7 +26,6 @@ import com.geosiege.game.effects.GeoEffects;
 import com.geosiege.game.level.LevelLoader;
 import com.geosiege.game.level.Stockpiles;
 import com.geosiege.game.menu.MenuLevel;
-import com.geosiege.game.resources.GameResources;
 import com.geosiege.game.storage.Preferences;
 import com.zeddic.game.common.Game;
 import com.zeddic.game.common.collision.CollisionManager;
@@ -260,9 +259,9 @@ public class GeoSiegeGame extends Game {
     synchronized (GameState.player.ship) {
       // Update the state of the ship based on the latest control input.
       GameState.player.ship.setAngle(moveControls.getAngle());
-      GameState.player.ship.setVelocity(
-          moveControls.getXVelocity() * 100,
-          moveControls.getYVelocity() * 100);
+      GameState.player.ship.updateSpeed(
+          moveControls.getXVelocity(),
+          moveControls.getYVelocity());
     }
 
     try {
