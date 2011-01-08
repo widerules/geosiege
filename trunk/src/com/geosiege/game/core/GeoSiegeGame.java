@@ -26,6 +26,7 @@ import com.geosiege.game.effects.GeoEffects;
 import com.geosiege.game.level.LevelLoader;
 import com.geosiege.game.level.Stockpiles;
 import com.geosiege.game.menu.MenuLevel;
+import com.geosiege.game.storage.GameStorage;
 import com.geosiege.game.storage.Preferences;
 import com.zeddic.game.common.Game;
 import com.zeddic.game.common.collision.CollisionManager;
@@ -110,7 +111,7 @@ public class GeoSiegeGame extends Game {
     float moveX = left;
     float fireX = right;
     float moveY, fireY;
-    String joystickLocation = GameState.preferences.getJoystickLocation();
+    String joystickLocation = GameStorage.preferences.getJoystickLocation();
     if (joystickLocation.equals(Preferences.JOYSTICK_LOCATION_TOPLEFT_BOTTOMRIGHT)) {
       moveY = top;
       fireY = bottom;
@@ -126,7 +127,7 @@ public class GeoSiegeGame extends Game {
     directionFireControls = new JoystickControl(fireX, fireY, false, Color.argb(255, 214, 28, 28));
     
     // Swap locations of move/fire if requested.
-    if (GameState.preferences.getSwapJoysticks()) {
+    if (GameStorage.preferences.getSwapJoysticks()) {
       JoystickControl temp = moveControls;
       moveControls = directionFireControls;
       directionFireControls = temp;
@@ -155,7 +156,7 @@ public class GeoSiegeGame extends Game {
 
     resetGameObjects();
     try {
-      LevelLoader loader = new LevelLoader(GameState.scores, GameState.stockpiles.enemies, FIRST_SPAWN_DELAY);
+      LevelLoader loader = new LevelLoader(GameStorage.scores, GameState.stockpiles.enemies, FIRST_SPAWN_DELAY);
       GameState.level = loader.loadLevel("levels/" + menuLevel.file);
     } catch (IOException e) {
       throw new RuntimeException("Unable load load level!", e);
@@ -205,7 +206,7 @@ public class GeoSiegeGame extends Game {
       return;
     }
     
-    GameState.stats.recordTimePlayed(time);
+    GameStorage.stats.recordTimePlayed(time);
     
     GameState.level.update(time);
     GameState.stockpiles.update(time);

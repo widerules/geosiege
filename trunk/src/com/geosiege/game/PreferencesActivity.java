@@ -1,10 +1,10 @@
 package com.geosiege.game;
 
-import com.geosiege.game.core.GameState;
-import com.geosiege.game.storage.Preferences;
-
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.geosiege.game.storage.GameStorage;
+import com.geosiege.game.storage.Preferences;
 
 /**
  * An activity to render game preferences. The UI is rendered using android's
@@ -19,8 +19,8 @@ public class PreferencesActivity extends PreferenceActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    GameState.setup(this);
-    GameState.analytics.trackPageView("/preferences");
+    GameStorage.load(this);
+    GameStorage.analytics.trackPageView("/preferences");
 
     getPreferenceManager().setSharedPreferencesMode(MODE_PRIVATE);
     getPreferenceManager().setSharedPreferencesName(Preferences.PREFERENCES_FILE_NAME);
@@ -32,6 +32,6 @@ public class PreferencesActivity extends PreferenceActivity {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    GameState.cleanup();
+    GameStorage.save();
   }
 }

@@ -6,9 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 
-import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Gun;
 
 public class Upgrades implements MoneyProvider {
@@ -20,10 +20,8 @@ public class Upgrades implements MoneyProvider {
   private static final String GROUP_GUNS = "Guns";
   private static final String GROUP_ENGINE_TRAIL = "Engine Trails";
   
-  
   private SharedPreferences prefs;
   private SharedPreferences.Editor editor;
-  
   
   private SpeedUpgrade speedUpgrade = new SpeedUpgrade(this);
   private TailUpgrade tailUpgrade = new TailUpgrade(this);
@@ -39,8 +37,8 @@ public class Upgrades implements MoneyProvider {
   
   private int money;
 
-  public Upgrades() {
-    this(GameState.activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
+  public Upgrades(Activity activity) {
+    this(activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
   }
 
   public Upgrades(SharedPreferences prefs) {  

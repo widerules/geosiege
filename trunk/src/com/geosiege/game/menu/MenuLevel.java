@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import android.os.Bundle;
 
-import com.geosiege.game.core.GameState;
 import com.geosiege.game.level.Level;
 import com.geosiege.game.level.LevelLoader;
 import com.geosiege.game.menu.Levels.Difficulty;
+import com.geosiege.game.storage.GameStorage;
 
 public class MenuLevel {
  
@@ -26,7 +26,7 @@ public class MenuLevel {
   }
   
   private void loadMetadata() {
-    LevelLoader loader = new LevelLoader(GameState.scores, null);
+    LevelLoader loader = new LevelLoader(GameStorage.scores, null);
     try {
       level = loader.loadLevel("levels/" + file, true);
     } catch (IOException e) {

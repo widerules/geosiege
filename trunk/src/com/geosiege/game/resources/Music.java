@@ -1,6 +1,5 @@
 package com.geosiege.game.resources;
 
-
 import java.io.IOException;
 
 import android.content.res.AssetFileDescriptor;

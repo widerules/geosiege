@@ -1,7 +1,6 @@
 package com.geosiege.game.storage;
 
-import com.geosiege.game.core.GameState;
-
+import android.app.Activity;
 import android.content.SharedPreferences;
 
 
@@ -25,8 +24,8 @@ public class Preferences {
   private boolean debugMode;
   private boolean playMusic;
   
-  public Preferences() {
-    this(GameState.activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
+  public Preferences(Activity activity) {
+    this(activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
   }
   
   public Preferences(SharedPreferences prefs) {

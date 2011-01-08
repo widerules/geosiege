@@ -1,9 +1,8 @@
 package com.geosiege.game.highscore;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-
-import com.geosiege.game.core.GameState;
 
 /**
  * Provides read-only access to preferences set from the preferences activity.
@@ -20,8 +19,8 @@ public class HighScores {
   private Editor editor;
   
   
-  public HighScores() {
-    this(GameState.activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
+  public HighScores(Activity activity) {
+    this(activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
   }
   
   public HighScores(SharedPreferences prefs) {
@@ -29,12 +28,9 @@ public class HighScores {
     this.editor = prefs.edit();
   }
   
-  /*private void load() {
-    joystickLocation = prefs.getString("inputLocation", JOYSTICK_LOCATION_TOPLEFT_BOTTOMRIGHT);
-    swapMoveAndFireJoysticks = prefs.getBoolean("swapJoysticks", false);
-    showFps = prefs.getBoolean("showFps", false);
-    debugMode = prefs.getBoolean("debugMode", false);
-  }*/
+  public void save() {
+    editor.commit();
+  }
   
   public boolean containsScore(int levelId) {
     return prefs.contains(LEVEL_PREFIX + levelId);
@@ -45,7 +41,6 @@ public class HighScores {
   }
   
   public void setHighScore(int levelId, int score) {
-    editor.putInt(LEVEL_PREFIX + levelId, score);
-    editor.commit();    
+    editor.putInt(LEVEL_PREFIX + levelId, score);  
   }
 }

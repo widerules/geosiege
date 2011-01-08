@@ -13,6 +13,7 @@ import com.geosiege.game.ships.DaBomb;
 import com.geosiege.game.ships.DeathStar;
 import com.geosiege.game.ships.EnemyShip;
 import com.geosiege.game.ships.SimpleEnemyShip;
+import com.geosiege.game.storage.GameStorage;
 import com.zeddic.game.common.stage.Stage;
 import com.zeddic.game.common.stage.StageIncrementor;
 
@@ -104,8 +105,12 @@ public class Scorer {
   
   public void saveHighscore() {
     if (hitHighscore) {
-      GameState.scores.setHighScore(GameState.level.id, score);
+      GameStorage.scores.setHighScore(GameState.level.id, score);
     }
+  }
+  
+  public void saveEarnedMoney() {
+    GameStorage.upgrades.addMoney(getScoreAsMoney());
   }
 
   public int getScoreAsMoney() {
