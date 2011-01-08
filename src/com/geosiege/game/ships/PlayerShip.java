@@ -25,6 +25,7 @@ import com.geosiege.game.components.ParticleTail;
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;
 import com.geosiege.game.guns.Gun;
+import com.geosiege.game.storage.GameStorage;
 import com.zeddic.game.common.PhysicalObject;
 import com.zeddic.game.common.collision.CollisionComponent;
 import com.zeddic.game.common.collision.CollisionManager;
@@ -71,9 +72,9 @@ public class PlayerShip extends Ship {
     paint = new Paint(PAINT);
     setBounds(new Bounds(new Circle(8)));
     
-    speed = GameState.upgrades.getSpeed();
+    speed = GameStorage.upgrades.getSpeed();
     
-    gun = GameState.upgrades.getGun();
+    gun = GameStorage.upgrades.getGun();
     gun.setOwner(this);
     
     components = new ComponentManager(this);
@@ -81,7 +82,7 @@ public class PlayerShip extends Ship {
     components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
     components.add(gun);
     
-    if (GameState.upgrades.isTailEnabled()) {
+    if (GameStorage.upgrades.isTailEnabled()) {
       components.add(new ParticleTail(this, 11));
     }
   }

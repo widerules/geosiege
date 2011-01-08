@@ -37,6 +37,7 @@ import com.geosiege.game.core.GameState;
 import com.geosiege.game.menu.Levels;
 import com.geosiege.game.menu.MenuLevel;
 import com.geosiege.game.menu.MenuLevelGroup;
+import com.geosiege.game.storage.GameStorage;
 import com.zeddic.game.common.ui.SeparatedListAdapter;
 
 public class LevelListActivity extends Activity {
@@ -48,9 +49,8 @@ public class LevelListActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    GameState.setup(this);
-    
-    GameState.analytics.trackPageView("/levels");
+    GameStorage.load(this);
+    GameStorage.analytics.trackPageView("/levels");
     
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.level_list);
@@ -76,13 +76,13 @@ public class LevelListActivity extends Activity {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    GameState.cleanup();
+    GameStorage.save();
   }
   
   private void startLevel(MenuLevel level) {
     Intent intent = new Intent(this, GameActivity.class);
     
-    // Store the desired level in a bundle that can be prased from the game
+    // Store the desired level in a bundle that can be parsed from the game
     // activity.
     Bundle bundle = new Bundle();
     level.storeInBundle(bundle);    
@@ -126,7 +126,7 @@ public class LevelListActivity extends Activity {
         
         // Force reloading the scores in case a new one was set since initially
         // loading the file.
-        o.level.loadScores(GameState.scores);
+        o.level.loadScores(GameStorage.scores);
         String scoreText = o.level.highscoreSet ? Integer.toString(o.level.highscore) : "-";
         score.setText("Highscore: " + scoreText);
         // score.setVisibility(View.GONE);

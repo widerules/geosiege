@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.geosiege.game.core.GameState;
+import com.geosiege.game.storage.GameStorage;
 import com.geosiege.game.upgrade.Upgrade;
 import com.geosiege.game.upgrade.UpgradeListMenuAdapter;
 import com.zeddic.game.common.ui.SeparatedListAdapter;
@@ -22,13 +22,13 @@ public class UpgradesActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     
-    GameState.setup(this);
-    GameState.analytics.trackPageView("/upgrades");
+    GameStorage.load(this);
+    GameStorage.analytics.trackPageView("/upgrades");
     
     setContentView(R.layout.upgrades);
     
     adapter = new SeparatedListAdapter(this);
-    Map<String, List<Upgrade>> upgrades = GameState.upgrades.getUpgrades();
+    Map<String, List<Upgrade>> upgrades = GameStorage.upgrades.getUpgrades();
     for (String group : upgrades.keySet()) {
       adapter.addSection(group, getUpgradesAdapter(upgrades.get(group)));
     }
@@ -43,7 +43,7 @@ public class UpgradesActivity extends Activity {
   @Override
   public void onDestroy() {
     super.onDestroy();
-    GameState.cleanup();
+    GameStorage.save();
   }
   
   @Override
@@ -59,14 +59,14 @@ public class UpgradesActivity extends Activity {
   
   private void refreshMoneyText() {
     moneyText.setText("$"+ UpgradeListMenuAdapter.MONEY_FORMAT.format(
-        GameState.upgrades.getMoney()));
+        GameStorage.upgrades.getMoney()));
   }
   
   private UpgradeListMenuAdapter getUpgradesAdapter(List<Upgrade> upgrades) {
 
     // Create the adapter.
     UpgradeListMenuAdapter adapter =  new UpgradeListMenuAdapter(
-        this, R.layout.upgraderow, GameState.upgrades, upgrades);
+        this, R.layout.upgraderow, GameStorage.upgrades, upgrades);
     
     // Listen to when it requests any UI refreshes, such as when
     // an item is bought.

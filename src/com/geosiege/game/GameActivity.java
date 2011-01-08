@@ -39,6 +39,7 @@ import com.geosiege.game.core.GameState;
 import com.geosiege.game.core.GeoSiegeGame;
 import com.geosiege.game.menu.MenuLevel;
 import com.geosiege.game.resources.GameResources;
+import com.geosiege.game.storage.GameStorage;
 import com.zeddic.game.common.GameSurface;
 import com.zeddic.game.common.Updater;
 
@@ -57,11 +58,12 @@ public class GameActivity extends Activity {
     setContentView(R.layout.game);
     
     GameState.setup(this);
+    GameStorage.load(this);
     
     // Get the choosen level from the intent parameters.
     Bundle bundle = getIntent().getExtras();
     MenuLevel selectedLevel = MenuLevel.getLevelFromBundle(bundle);
-    GameState.analytics.trackPageView("/levels/" + selectedLevel.level.id);
+    GameStorage.analytics.trackPageView("/levels/" + selectedLevel.level.id);
     
     // Create the drawing Surface;
     surface = new GameSurface(this);
@@ -73,7 +75,7 @@ public class GameActivity extends Activity {
     // Create the updater to coordinate the background update/render thread.
     updater = new Updater(surface);
     updater.setGame(game);
-    updater.showFps(GameState.preferences.getShowFps());
+    updater.showFps(GameStorage.preferences.getShowFps());
     
     // Set the updater to listen to various game events and trigger
     // appropriate dialog boxes. The game can't do this itself from a non-UI
@@ -108,21 +110,20 @@ public class GameActivity extends Activity {
   
   @Override
   public void onDestroy() {
-    Log.d(GameActivity.class.getName(), "Destroying Activity");
+    Log.d(GameActivity.class.getName(), "Destroying Game Activity");
     updater.stop();
-    applyEarnedMoney();
+    saveEarnings();
     GameState.cleanup();
+    GameStorage.save();
     super.onDestroy();
   }
   
-  private void applyHighscore() {
+  private void saveEarnings() {
     GameState.player.scorer.saveHighscore();
+    GameState.player.scorer.saveEarnedMoney();
+    GameState.player.scorer.reset();
   }
-  
-  private void applyEarnedMoney() {
-    GameState.upgrades.addMoney(GameState.player.scorer.getScoreAsMoney());
-  }
-
+    
   private void showMessage(String message) {    
     TextView messageText = (TextView)findViewById(R.id.gameMessageText);
     messageText.setText(message);
@@ -192,7 +193,7 @@ public class GameActivity extends Activity {
    
     @Override
     public void handleMessage(Message msg) {
-      if (GameState.preferences.getPlayMusic()) {
+      if (GameStorage.preferences.getPlayMusic()) {
         GameResources.music.playRandomSong();
       }
     }
@@ -213,8 +214,6 @@ public class GameActivity extends Activity {
           AlertDialog.BUTTON1, "Play Again",
           new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-              applyHighscore();
-              applyEarnedMoney();
               game.restart();
             }
           });
@@ -227,6 +226,7 @@ public class GameActivity extends Activity {
             }
           });
       
+      saveEarnings();
       dialog.show();
     }
   }
@@ -246,8 +246,6 @@ public class GameActivity extends Activity {
           AlertDialog.BUTTON1, "Play Again",
           new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-              applyHighscore();
-              applyEarnedMoney();
               game.restart();
             }
           });
@@ -260,6 +258,7 @@ public class GameActivity extends Activity {
             }
           });
       
+      saveEarnings();
       dialog.show();
     }
   }

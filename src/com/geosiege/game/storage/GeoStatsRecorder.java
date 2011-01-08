@@ -1,8 +1,7 @@
 package com.geosiege.game.storage;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
-
-import com.geosiege.game.core.GameState;
 
 public class GeoStatsRecorder {
 
@@ -20,8 +19,8 @@ public class GeoStatsRecorder {
   private int enemiesKilled  = 0;
   private long timePlayed = 0;
   
-  public GeoStatsRecorder() {
-    this(GameState.activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
+  public GeoStatsRecorder(Activity activity) {
+    this(activity.getSharedPreferences(PREFERENCES_FILE_NAME, 0));
   }
   
   public GeoStatsRecorder(SharedPreferences prefs) {  

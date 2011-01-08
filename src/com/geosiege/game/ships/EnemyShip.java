@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 
 import com.geosiege.game.core.GameState;
 import com.geosiege.game.guns.Bullet;
+import com.geosiege.game.storage.GameStorage;
 import com.zeddic.game.common.PhysicalObject;
 import com.zeddic.game.common.transistions.Transitions;
 import com.zeddic.game.common.util.Countdown;
@@ -110,7 +111,7 @@ public class EnemyShip extends Ship {
     
     GameState.geoEffects.shockwave(x, y);
     GameState.player.recordKill(getClass());
-    GameState.stats.recordKill();
+    GameStorage.stats.recordKill();
     
     kill();
   }

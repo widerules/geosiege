@@ -14,8 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.geosiege.game.core.GameState;
 import com.geosiege.game.menu.MenuStat;
+import com.geosiege.game.storage.GameStorage;
 
 public class StatsActivity extends Activity {
   
@@ -25,9 +25,8 @@ public class StatsActivity extends Activity {
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.stat_list);
     
-    GameState.setup(this);
-    
-    GameState.analytics.trackPageView("/stats");
+    GameStorage.load(this);
+    GameStorage.analytics.trackPageView("/stats");
     
     loadList();
   }
@@ -35,14 +34,14 @@ public class StatsActivity extends Activity {
   @Override
   public void onResume() {
     super.onResume();
-    GameState.stats.load();
+    GameStorage.stats.load();
     loadList();
   }
   
   @Override
   public void onDestroy() {
     super.onDestroy();
-    GameState.cleanup();
+    GameStorage.save();
   }
   
   private void loadList() {
@@ -60,11 +59,11 @@ public class StatsActivity extends Activity {
     List<MenuStat> stats = new ArrayList<MenuStat>();
     stats.add(new MenuStat(
         "Enemies Killed",
-        GameState.stats.getNumberOfEnemeiesKilled()));
+        GameStorage.stats.getNumberOfEnemeiesKilled()));
     
     stats.add(new MenuStat(
         "Time Played",
-        GameState.stats.getTimePlayedAsString()));
+        GameStorage.stats.getTimePlayedAsString()));
     
     return getStatAdapter(stats);
   }
