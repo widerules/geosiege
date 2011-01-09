@@ -26,12 +26,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -137,55 +131,11 @@ public class GameActivity extends Activity {
     message.setVisibility(View.INVISIBLE);
   }
   
-  private void startCountdown() {
-    
-    int countdown = 3;
-    final TextView countdownText = (TextView)findViewById(R.id.gameCountdownText);
-    
-    countdownText.setText(Integer.toString(countdown));
-    
-    AnimationSet set = new AnimationSet(true);
-    Animation animation = new AlphaAnimation(1.0f, 0.0f);
-    animation.setInterpolator(new AccelerateInterpolator());
-    animation.setDuration(1000);
-    animation.setRepeatCount(countdown - 1);
-    set.addAnimation(animation);
-    animation = new ScaleAnimation(1f, 3f, 1f, 3f, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
-    animation.setDuration(1000);
-    animation.setRepeatCount(countdown - 1);
-    set.addAnimation(animation);
-    set.setFillAfter(true);
-    
-    animation.setAnimationListener(new CountdownAnimationListener(countdown, countdownText));
-    
-    countdownText.startAnimation(set);
-    countdownText.setVisibility(View.VISIBLE);
-  }
-  
-  private class CountdownAnimationListener implements AnimationListener {
-    private int count;
-    private TextView view;
-    
-    public CountdownAnimationListener(int count, TextView view) {
-      this.count = count;
-      this.view = view;
-    }
-    
-    public void onAnimationRepeat(Animation animation) {
-      count--;
-      view.setText(Integer.toString(count));
-    }
-    
-    public void onAnimationEnd(Animation animation) {}
-    public void onAnimationStart(Animation animation) {}
-  }
-  
   private class LoadedHandler extends Handler {
     
     @Override
     public void handleMessage(Message msg) {
       hideMessage();
-      startCountdown();
     }
   }
   

@@ -193,7 +193,6 @@ public class PlayerShip extends Ship {
     }
     kill();
     GameState.geoEffects.shockwave(x, y);
-    GameState.level.delayGame(5000);
     GameState.stockpiles.killAllEnemies();    
   }
 

@@ -6,7 +6,7 @@ public class TextFlasher {
   
   public void flashMessage(String message) {
     flashMessage(message, 0);
-  } 
+  }
   
   public void flashMessage(String message, float offset) {
     TextFlash flash = GameState.stockpiles.ui.take(TextFlash.class);
