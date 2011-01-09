@@ -47,7 +47,7 @@ public class GeoSiegeGame extends Game {
   private static final int GAME_STATE_PROMPT = 2;
   private static final int GAME_STATE_PAUSED = 3;
   
-  private static final long FIRST_SPAWN_DELAY = 3000;
+  private static final long FIRST_SPAWN_DELAY = 0;
   
   private int gameState;
   private JoystickControl moveControls;
@@ -98,10 +98,9 @@ public class GeoSiegeGame extends Game {
   }
   
   private void setupUiElements() {
-    //healthBar = new ProgressBar(GameState.screenWidth - 35, 40, 80, 100);
     
     // Compute possible x/y locations for the joysticks.
-    float radius = JoystickControl.BORDER_RADIUS;
+    float radius = JoystickControl.BORDER_RADIUS + 60;
     float left = radius;
     float right = GameState.screenWidth - radius;
     float top = radius;
@@ -123,8 +122,8 @@ public class GeoSiegeGame extends Game {
       fireY = bottom;
     }
 
-    moveControls = new JoystickControl(moveX, moveY, false, Color.argb(255, 240, 240, 240));
-    directionFireControls = new JoystickControl(fireX, fireY, false, Color.argb(255, 214, 28, 28));
+    moveControls = new JoystickControl(moveX, moveY, true, Color.argb(255, 240, 240, 240));
+    directionFireControls = new JoystickControl(fireX, fireY, true, Color.argb(255, 214, 28, 28));
     
     // Swap locations of move/fire if requested.
     if (GameStorage.preferences.getSwapJoysticks()) {
@@ -158,6 +157,7 @@ public class GeoSiegeGame extends Game {
     try {
       LevelLoader loader = new LevelLoader(GameStorage.scores, GameState.stockpiles.enemies, FIRST_SPAWN_DELAY);
       GameState.level = loader.loadLevel("levels/" + menuLevel.file);
+      GameState.level.start();
     } catch (IOException e) {
       throw new RuntimeException("Unable load load level!", e);
     }

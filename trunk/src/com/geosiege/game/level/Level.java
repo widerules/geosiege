@@ -6,9 +6,10 @@ import java.util.List;
 import android.graphics.Canvas;
 
 import com.geosiege.game.core.Map;
+import com.geosiege.game.effects.CountdownEffect;
+import com.geosiege.game.effects.TextFlasher;
 import com.geosiege.game.highscore.HighScores;
 import com.zeddic.game.common.GameObject;
-import com.zeddic.game.common.util.Countdown;
 
 /**
  * A single level or round within the game. A level is made up of:
@@ -25,8 +26,6 @@ public class Level extends GameObject {
    * when determining if the player has completed the level.
    */
   private static final int ALL_SWARMS_DEAD_VISION_SIZE = 5;
-  
-  private static final long DEFAULT_DELAY = 3000;
   
   /** The name of the level. */
   public String name;
@@ -46,14 +45,22 @@ public class Level extends GameObject {
   /** Whether the player has set a high score yet. */
   public boolean highscoreSet;
   
+  /** The map with obstacles. */
   public Map map;
-  public List<Swarm> swarms = new ArrayList<Swarm>();
   
+  /** The the order in which swarms should be spawned. */
+  public List<Swarm> swarms = new ArrayList<Swarm>();
+
+  /** The index of the next swarm to spawn. */
   private int nextSwarmIndex = 0;
+  
+  /** The next swarm that will be spawned. */
   private Swarm nextSwarm;
+  
+  /** Countdown animation before the game starts. */
+  private CountdownEffect countdown;
+
   private long firstSpawnDelay = 0;
-  private boolean delayed = false;
-  private Countdown delay = new Countdown(DEFAULT_DELAY);
   
   public Level() {
     this(0);
@@ -63,12 +70,16 @@ public class Level extends GameObject {
     this.map = new Map();
     this.firstSpawnDelay = firstSpawnDelay;
     this.complete = false;
-    this.delayed = false;
   }
   
   public void loadScores(HighScores scores) {
     highscoreSet = scores.containsScore(id);
     highscore = scores.getHighScore(id);
+  }
+  
+  public void start() {
+    this.countdown = new CountdownEffect(4, new TextFlasher());
+    this.countdown.start();
   }
   
   protected void setMapSize(float width, float height) {
@@ -95,14 +106,10 @@ public class Level extends GameObject {
   public void update(long time) {
     
     map.update(time);
+    countdown.update(time);
     
-    if (delayed) {
-      delay.update(time);
-      if (delay.isDone()) {
-        delayed = false;
-      } else {
-        return;
-      }
+    if (!countdown.isDone()) {
+      return;
     }
     
     // If the levels over with do nothing.
@@ -128,12 +135,6 @@ public class Level extends GameObject {
       
       nextSwarm = swarms.get(nextSwarmIndex);
     }
-  }
-  
-  public void delayGame(long time) {
-    delayed = true;
-    delay.reset(time);
-    delay.start();
   }
   
   /**

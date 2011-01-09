@@ -33,7 +33,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.geosiege.game.core.GameState;
 import com.geosiege.game.menu.Levels;
 import com.geosiege.game.menu.MenuLevel;
 import com.geosiege.game.menu.MenuLevelGroup;

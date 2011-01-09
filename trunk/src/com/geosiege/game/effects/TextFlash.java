@@ -39,7 +39,7 @@ public class TextFlash extends GameObject {
   private Countdown flashCountdown = new Countdown(2000);
   private Range alphaRange = new Range(255, 0);
   private Range scaleRange = new Range(.5f, 2f);
-  private float x; 
+  private float x;
   private float y;
   
   private boolean flashing;
@@ -47,7 +47,7 @@ public class TextFlash extends GameObject {
   public TextFlash() {
     reset();
   }
-  
+
   public void flashMessage(float x, float y, String message) {
     reset();
     this.message = message;
@@ -77,7 +77,7 @@ public class TextFlash extends GameObject {
     float scale = scaleRange.getValue(progress, Transitions.LINEAR);
     
     c.save();
-    // canvas.translate(x, y);
+    
     c.translate(x, y);
     c.scale(scale, scale);
     

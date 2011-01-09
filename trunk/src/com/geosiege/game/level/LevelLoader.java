@@ -69,7 +69,7 @@ public class LevelLoader {
     if (level.swarms.size() == 0 && !metadataOnly) {
       throw new IOException("No swarms were loaded in the level " + fileName);
     }
-  
+
     return level;
   }
   

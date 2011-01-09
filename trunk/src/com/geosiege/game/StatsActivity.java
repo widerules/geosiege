@@ -34,7 +34,6 @@ public class StatsActivity extends Activity {
   @Override
   public void onResume() {
     super.onResume();
-    GameStorage.stats.load();
     loadList();
   }
   

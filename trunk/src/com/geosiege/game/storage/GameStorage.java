@@ -24,12 +24,15 @@ public class GameStorage {
     
     loadCount++;
     
+    // Preferences have to be loaded every activity, since they may be changed
+    // outside of the scope of the applications control.
+    preferences = new Preferences(activity);
+    
     if (loaded) {
       return;
     }
     
     stats =  new GeoStatsRecorder(activity);
-    preferences = new Preferences(activity);
     upgrades = new Upgrades(activity);
     scores = new HighScores(activity);
     analytics = GoogleAnalyticsTracker.getInstance();
